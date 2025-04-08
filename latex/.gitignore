@@ -1,0 +1,27 @@
+# Automatically generated files by LaTeX
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.pdf
+*.synctex.gz
+*.toc
+*.thm
+*.xdv
+
+# Temporary files and editor backups
+*~
+\#*\#
+.*.swp
+.latexmk/
+
+# Build artifacts
+*.out
+
+# Other temporary files that might be generated
+*.dvi
+*.ps
+
+# If you have any other build systems or tools, add their specific ignore patterns below

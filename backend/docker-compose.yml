@@ -1,0 +1,20 @@
+services:
+  db:
+    ports:
+      - "5432:5432"
+      - "5532:5532"
+    image: agnohq/pgvector:16
+    environment:
+      POSTGRES_DB: agno
+      POSTGRES_USER: agno
+      POSTGRES_PASSWORD: agno
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agno"]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

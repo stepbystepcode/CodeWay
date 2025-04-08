@@ -193,7 +193,7 @@ This project aims to develop an AI programming assistant model based on Retrieva
 
 
 \section{项目规模}
-项目成本约为 20 元，开发周期约 3 个月。
+项目成本约为 0 元，开发周期约 3 个月。
 
 \section{初步设想}
 基本功能
@@ -208,12 +208,12 @@ This project aims to develop an AI programming assistant model based on Retrieva
 \begin{enumerate}[itemsep=2pt,topsep=0.6pt,parsep=0.6pt]
 \item 个人信息管理：用户可在个人中心查看、修改个人注册信息，包括昵称、头像、密码等，设置个性化偏好，如默认编程语言、常用模型选择等。
 \item 代码编辑与调试：在系统提供的代码编辑器中输入、编辑代码，利用代码试运行和纠错机制进行代码调试工作。同时，可将常用代码片段收藏，方便后续复用。
-\item 模型使用与切换：自由选择系统内置的 ChatGPT 4o、Qwen/QwQ32b 模型，或按照自身需求配置并调用 Hugging Face 平台上的其他模型，享受不同模型带来的差异化编程辅助服务。
+\item 模型使用与切换：自由选择系统内置的 OpenAI gpt-4o、Qwen-2.5-32B-Instruct 模型，或按照自身需求配置并调用 Hugging Face 平台上的其他模型，享受不同模型带来的差异化编程辅助服务。
 \item 文档检索与知识学习：借助文档 URL 精确检索功能，查询特定技术文档获取编程知识。查看系统推荐的相关编程教程、文章链接，提升自身编程技能。
 \item 反馈提交：在使用过程中，若遇到问题或有改进建议，可通过反馈渠道向管理员提交，与平台保持互动，助力系统持续优化。
 \end{enumerate}
 \section{可行性研究}
-进行一周，费用不超过 100 元。
+进行一周，费用不超过 0 元。
 
 
 \chapter{可行性研究报告}
@@ -279,12 +279,12 @@ This project aims to develop an AI programming assistant model based on Retrieva
     \end{enumerate}
     \item 输出要求：数据完整、准确。
     \item 系统功能模块图
-    \begin{figure}[h] % 创建一个图片环境，[h]表示图片尽量放在当前位置
-    \centering % 使图片居中
-    \includegraphics[width=0.8\textwidth]{figures/system-module.pdf}
-    \caption{系统功能模块图} % 添加图片标题
-    \label{fig:system-module} % 为图片添加标签，方便在文档中引用
-\end{figure}
+%     \begin{figure}[h] % 创建一个图片环境，[h]表示图片尽量放在当前位置
+%     \centering % 使图片居中
+%     \includegraphics[width=0.8\textwidth]{figures/system-module.pdf}
+%     \caption{系统功能模块图} % 添加图片标题
+%     \label{fig:system-module} % 为图片添加标签，方便在文档中引用
+% \end{figure}
     \item 安全与保密方面的要求：数据库的安全性首先通过视图机制，不同的用户只能访问系统授权的视图，这在一定程度上提高数据库的安全性。系统平台的安全性则体现在操作系统的安全性、计算机系统的安全性和网络体系的安全性等方面。
     \item 同本系统相连接的其他系统：无。
     \item 完成期限：三个月。
@@ -329,20 +329,20 @@ This project aims to develop an AI programming assistant model based on Retrieva
 \begin{enumerate}[label=(\arabic*)]
     \item ChatGPT
 ChatGPT 是 OpenAI 于 2022 年 11 月 30 日发布的聊天机器人模型，基于 GPT-3.5 和 GPT-4 大模型构建，能以对话方式与用户交互。它在语言表达和生成方面优势显著，回复自然流畅，适合日常闲聊，在创意写作如生成诗歌、故事等内容时表现突出。还具备强大的语言理解能力，可处理各类自然语言文本，理解其中含义与潜在意图，能根据用户输入生成逻辑清晰、语法正确的长文本回复，涵盖代码输出、文字翻译、论文及小说撰写等功能。其插件丰富，进一步拓展了应用场景。不过，它存在 “幻觉” 问题，会生成错误或虚构信息，知识更新也不及时，且缺乏个性化定制。
-\begin{figure}[h] % 创建一个图片环境，[h]表示图片尽量放在当前位置
-    \centering % 使图片居中
-    \includegraphics[width=0.8\textwidth]{figures/chatgpt.pdf}
-    \caption{ChatGPT界面} % 添加图片标题
-    \label{fig:ChatGPT} % 为图片添加标签，方便在文档中引用
-\end{figure}
+% \begin{figure}[h] % 创建一个图片环境，[h]表示图片尽量放在当前位置
+%     \centering % 使图片居中
+%     \includegraphics[width=0.8\textwidth]{figures/chatgpt.pdf}
+%     \caption{ChatGPT界面} % 添加图片标题
+%     \label{fig:ChatGPT} % 为图片添加标签，方便在文档中引用
+% \end{figure}
     \item Claude
 Claude 是 Anthropic 公司开发的大型语言模型，以强大的自然语言处理能力、卓越的上下文理解能力和高度安全性受关注。知识储备深入，回复准确性高，能全面准确理解用户语言，提供精确回复，还可提供个性化定制服务。采用 “宪法式 AI” 训练方法，减少有害或不当内容生成。在处理长文本方面表现出色，支持 20 万级别的 Token，甚至能处理超 100 万 Token 输入。但相比 ChatGPT，其在某些场景下的多样性受限，市场认知度和应用范围也相对较窄。
-\begin{figure}[h] % 创建一个图片环境，[h]表示图片尽量放在当前位置
-    \centering % 使图片居中
-    \includegraphics[width=0.8\textwidth]{figures/claude.pdf}
-    \caption{Claude界面} % 添加图片标题
-    \label{fig:Claude} % 为图片添加标签，方便在文档中引用
-\end{figure}
+% \begin{figure}[h] % 创建一个图片环境，[h]表示图片尽量放在当前位置
+%     \centering % 使图片居中
+%     \includegraphics[width=0.8\textwidth]{figures/claude.pdf}
+%     \caption{Claude界面} % 添加图片标题
+%     \label{fig:Claude} % 为图片添加标签，方便在文档中引用
+% \end{figure}
 \end{enumerate}
 \subsection{新旧系统对比}
 \begin{enumerate}[label=(\arabic*)]
@@ -369,21 +369,21 @@ Claude 是 Anthropic 公司开发的大型语言模型，以强大的自然语�
 费用开支明细如表 1 所示。
 \begin{table}[H] % 表格位置固定
     \centering % 表格整体居中
-    \caption{三线表示例} % 表格表题
-    \label{tab:three-line} % 表格标签
+    \caption{费用开支明细} % 表格表题
+    \label{tab:cost} % 表格标签
     \renewcommand\arraystretch{0.85} % 定义表格行距
     \setlength{\tabcolsep}{12pt} % 定义列间宽度
-    \begin{tabular}{ccccc} % 表格列样式定义
+    \begin{tabular}{cc} % 表格列样式定义
         \toprule[1.5pt] % 顶线
         \textbf{项目} & \textbf{费用开支（元）} \\ % 表头
         \midrule[0.8pt] % 栏目线
-            办公费 & 14 \\
+            办公费 & 0 \\
             差旅费 & 0 \\
             机时费 & 0 \\
             资料费 & 0 \\
             通讯专用设备租金 & 0 \\
             人工费 & 0 \\
-            总计 & 14 \\
+            总计 & 0 \\
         \hline\hline % 底线
     \end{tabular}
 \end{table}
@@ -533,11 +533,11 @@ Claude 是 Anthropic 公司开发的大型语言模型，以强大的自然语�
 本项目由山西大学计算机与信息技术学院的学生参与开发，主要人员包括：
 \begin{table}[H] % 表格位置固定
     \centering % 表格整体居中
-    \caption{三线表示例} % 表格表题
-    \label{tab:three-line} % 表格标签
+    \caption{主要参加人员} % 表格表题
+    \label{tab:participants} % 表格标签
     \renewcommand\arraystretch{0.85} % 定义表格行距
     \setlength{\tabcolsep}{12pt} % 定义列间宽度
-    \begin{tabular}{ccccc} % 表格列样式定义
+    \begin{tabular}{ccc}
         \toprule[1.5pt] % 顶线
         \textbf{任务} & \textbf{姓名} & \textbf{技术水平} \\ % 表头
         \midrule[0.8pt] % 栏目线
@@ -591,25 +591,25 @@ f. 项目组承诺：对于系统存在的问题导致贵单位的经济损失�
 本系统开发的工作任务以及人员分工情况如表 3 所示。
 \begin{table}[H] % 表格位置固定
     \centering % 表格整体居中
-    \caption{三线表示例} % 表格表题
-    \label{tab:three-line} % 表格标签
+    \caption{工作任务与人员分工} % 表格表题
+    \label{tab:task-participants} % 表格标签
     \renewcommand\arraystretch{0.85} % 定义表格行距
     \setlength{\tabcolsep}{12pt} % 定义列间宽度
-    \begin{tabular}{ccccc} % 表格列样式定义
+    \begin{tabular}{cc} % 表格列样式定义
         \toprule[1.5pt] % 顶线
         \textbf{工作任务} & \textbf{参与人员} \\ % 表头
         \midrule[0.8pt] % 栏目线
         可行性分析报告 & 李京、周培聪\\ 
-软件开发计划书 & 李京、周培聪\\ 
-问题定义报告 & 李京、周培聪\\ 
-软件需求规格说明书 & 李京、周培聪\\ 
-测试计划 & 李京、周培聪\\ 
-软件设计规格说明书  & 李京、周培聪\\ 
-数据库建立  & 李京\\ 
-界面设计  & 李京\\ 
-用 UML绘制用例图、类图等各种图形  & 李京\\ 
-软件安装、测试 & 李京\\ 
-后期维护  & 李京\\ 
+        软件开发计划书 & 李京、周培聪\\ 
+        问题定义报告 & 李京、周培聪\\ 
+        软件需求规格说明书 & 李京、周培聪\\ 
+        测试计划 & 李京、周培聪\\ 
+        软件设计规格说明书  & 李京、周培聪\\ 
+        数据库建立  & 李京\\ 
+        界面设计  & 李京\\ 
+        用 UML绘制用例图、类图等各种图形  & 李京\\ 
+        软件安装、测试 & 李京\\ 
+        后期维护  & 李京\\ 
         \hline\hline % 底线
     \end{tabular}
 \end{table}
@@ -624,17 +624,25 @@ f. 项目组承诺：对于系统存在的问题导致贵单位的经济损失�
 本系统开发的大致计划如表 4 所示。
 \begin{table}[H] % 表格位置固定
     \centering % 表格整体居中
-    \caption{三线表示例} % 表格表题
-    \label{tab:three-line} % 表格标签
+    \caption{进度计划} % 表格表题
+    \label{tab:progress} % 表格标签
     \renewcommand\arraystretch{0.85} % 定义表格行距
     \setlength{\tabcolsep}{12pt} % 定义列间宽度
     \begin{tabular}{ccccc} % 表格列样式定义
         \toprule[1.5pt] % 顶线
         \textbf{进度} & \textbf{该阶段完成的任务} & \textbf{起始时间} \\ % 表头
         \midrule[0.8pt] % 栏目线
-            Hunan & Hunan & Hunan \\ % 表体
-            Yantai & Yantai & Yantai \\ % 表体
-            Yantai & Yantai & Yantai \\ % 表体
+        第一阶段 & 可行性分析报告 & 2025年3月19日 \\ % 表体
+        第二阶段 & 软件开发计划书 & 2025年3月19日 \\ % 表体
+        第三阶段 & 问题定义报告 & 2025年3月19日 \\ % 表体
+        第四阶段 & 软件需求规格说明书 & 2025年3月19日 \\ % 表体
+        第五阶段 & 测试计划 & 2025年3月19日 \\ % 表体
+        第六阶段 & 软件设计规格说明书 & 2025年3月19日 \\ % 表体
+        第七阶段 & 数据库建立 & 2025年3月19日 \\ % 表体
+        第八阶段 & 界面设计 & 2025年3月19日 \\ % 表体
+        第九阶段 & 用 UML绘制用例图、类图等各种图形 & 2025年3月19日 \\ % 表体
+        第十阶段 & 软件安装、测试 & 2025年3月19日 \\ % 表体
+        第十一阶段 & 后期维护 & 2025年3月19日 \\ % 表体
         \hline\hline % 底线
     \end{tabular}
 \end{table}
@@ -656,17 +664,17 @@ f. 项目组承诺：对于系统存在的问题导致贵单位的经济损失�
 本系统开发所需的支持条件如表 5 所示。
 \begin{table}[H] % 表格位置固定
     \centering % 表格整体居中
-    \caption{三线表示例} % 表格表题
-    \label{tab:three-line} % 表格标签
+    \caption{支持条件} % 表格表题
+    \label{tab:conditions} % 表格标签
     \renewcommand\arraystretch{0.85} % 定义表格行距
     \setlength{\tabcolsep}{12pt} % 定义列间宽度
-    \begin{tabular}{ccccc} % 表格列样式定义
+    \begin{tabular}{ccc} % 表格列样式定义
         \toprule[1.5pt] % 顶线
         \textbf{分类} & \textbf{推荐配置} & \textbf{最低配置} \\ % 表头
         \midrule[0.8pt] % 栏目线
-            Hunan & Hunan & Hunan \\ % 表体
-            Yantai & Yantai & Yantai \\ % 表体
-            Yantai & Yantai & Yantai \\ % 表体
+        硬件 & CPU core i5 及以上、内存 16G 及以上 & CPU core i5、内存 16G \\ % 表体
+        软件 & Linux 6.10 及以上 & Linux 6.10 \\ % 表体
+        网络 & 100Mbps 及以上 & 100Mbps \\ % 表体
         \hline\hline % 底线
     \end{tabular}
 \end{table}
@@ -690,7 +698,7 @@ b. 软件
 操作系统为Rocky Linux 9.5，使用数据库采用PostgreSQL。
 （2）运行时需要的支持条件
 a. 服务器的要求：
-① 服务器的中央处理部件（CPU)建议使用PIII 1G(以上)Xeon 处理器芯片；
+① 服务器的中央处理部件（CPU）建议使用PIII 1G(以上)Xeon 处理器芯片；
 ② 服务器内存必须使用服务器专用 ECC 内存；
 ③ 为了保证数据存储的绝对可靠，硬盘应使用磁盘冗余阵列（RAID 01）；
 ④ 为了防止服务器不可预测的故障，或者服务器的定期维护对公司整个业务造成
@@ -908,12 +916,12 @@ b. 服务器上应该配备的软件：
 \end{table}
 \subsection{软件需求的用例模型}
 本节主要关注于将自然语言描述的旅游信息管理系统领域的业务需求转化为UML 表达模型，以便更具体、更清晰地描述系统的各项功能需求。通过用例图和与之相配合的用例描述，我们将展示用户与系统之间的主要交互场景。
-\begin{figure}[h] % 创建一个图片环境，[h]表示图片尽量放在当前位置
-    \centering % 使图片居中
-    \includegraphics[width=0.8\textwidth]{figures/UseCaseDiagram.pdf}
-    \caption{系统用例图} % 添加图片标题
-    \label{fig:UseCaseDiagram} % 为图片添加标签，方便在文档中引用
-\end{figure}
+% \begin{figure}[h] % 创建一个图片环境，[h]表示图片尽量放在当前位置
+%     \centering % 使图片居中
+%     \includegraphics[width=0.8\textwidth]{figures/UseCaseDiagram.pdf}
+%     \caption{系统用例图} % 添加图片标题
+%     \label{fig:UseCaseDiagram} % 为图片添加标签，方便在文档中引用
+% \end{figure}
 接下来将介绍其中一些重点用例的用例模型，包括活动图及用例描述表。
 根据所属子系统定义用例名称，如表 11 所示。
 % 系统用例表
@@ -1210,29 +1218,28 @@ b. 服务器上应该配备的软件：
 \begin{enumerate}[label=(\arabic*)]
     \item 功能性要求：验证产品是否满足所有预定的功能需求，包括但不限于用户界面、代码生成、代码优化、代码调试、代码文档生成等功能。
     \item 性能要求：系统的响应速度、处理能力、并发用户数等性能指标是否达到预期要求。
-    \item 安全性要求：系统是否采取了必要的安全措施，如用户认证、权限管理、数据加
-    密等。
+    \item 安全性要求：系统是否采取了必要的安全措施，如用户认证、权限管理、数据加密等。
 \end{enumerate}
 \section{软件原型}
 项目采用figma进行界面原型设计
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/figma.pdf}
-    \caption{软件需求的界面原型}
-    \label{fig:figma}
-\end{figure}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/signup.pdf}
-    \caption{注册界面的界面原型}
-    \label{fig:signup}
-\end{figure}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/login.pdf}
-    \caption{登录界面的界面原型}
-    \label{fig:login}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{figures/figma.pdf}
+%     \caption{软件需求的界面原型}
+%     \label{fig:figma}
+% \end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{figures/signup.pdf}
+%     \caption{注册界面的界面原型}
+%     \label{fig:signup}
+% \end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{figures/login.pdf}
+%     \caption{登录界面的界面原型}
+%     \label{fig:login}
+% \end{figure}
 \chapter{软件设计规格说明书}
 \section{引言}
 本设计规格说明书的编写目的是为了明确码途CodeWay系统的功能需求、设计方案和技术规范，为开发团队提供详细的指导和参考，以确保软件的结构、功能和交互符合预期。它定义了系统的功能和特性，包括用户管理、代码生成、文档解析、RAG检索系统、智能辅助编程等方面的需求。通过编写规格说明书，项目团队成员可以更好地理解彼此的工作内容和要求，有助于协调团队成员之间的工作，提高项目管理的效率。

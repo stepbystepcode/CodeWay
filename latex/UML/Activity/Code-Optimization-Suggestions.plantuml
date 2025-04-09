@@ -1,8 +1,11 @@
 @startuml
 title Activity Diagram: Code Optimization Suggestions
 
+|User|
 start
 :User submits code;
+
+|System|
 :System performs multi-dimensional analysis (complexity, style, patterns, etc.);
 partition RAG Process {
   :System retrieves relevant optimization patterns;
@@ -11,6 +14,8 @@ partition RAG Process {
 :System identifies optimizable parts;
 :System provides specific optimization suggestions and refactoring strategies;
 :Display suggestions to user;
+
+|User|
 stop
 
 @enduml

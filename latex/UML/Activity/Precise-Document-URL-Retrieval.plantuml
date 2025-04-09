@@ -1,15 +1,20 @@
 @startuml
 title Activity Diagram: Precise Document URL Retrieval
 
+|User|
 start
 :User sets Document URL;
 :User enables document retrieval feature;
+
+|System|
 :System checks if URL format is valid;
 if (Is URL format valid?) then (Yes)
   :System checks if document exists in Vector DB;
   if (Does document exist?) then (Yes)
     :Enable QA feature;
     :System provides detailed answers based on document content;
+    
+    |User|
     stop
   else (No)
     :Prompt user: "Document not found, please add it";
@@ -19,10 +24,14 @@ if (Is URL format valid?) then (Yes)
       :Store vectors in Vector DB;
     }
     :Prompt user: "Document added successfully, QA ready";
+    
+    |User|
     stop
   endif
 else (No)
   :Prompt user: "Invalid URL format";
+  
+  |User|
   stop
 endif
 

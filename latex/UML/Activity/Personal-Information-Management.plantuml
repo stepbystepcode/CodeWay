@@ -1,13 +1,20 @@
 @startuml
 title Activity Diagram: Personal Information Management
 
+|User|
 start
 :User enters Personal Center;
+
+|System|
 :System displays basic info and profile completeness prompt;
+
+|User|
 split
   :User chooses to modify basic info;
   :User edits fields like nickname, email, etc.;
   :User saves changes;
+  
+  |System|
   :System validates data;
   if (Validation passes?) then (Yes)
     :System updates user information;
@@ -15,21 +22,35 @@ split
   else (No)
     :Display error message;
   endif
+  
+|User|
 split again
   :User chooses to manage account security;
   split
     :Choose "Change Password";
     :Enter change password process;
+    
+    |System|
     :Display result of password change;
+    
+  |User|
   split again
     :Choose "Manage Email Binding";
     :Enter email management process;
+    
+    |System|
     :Display result of operation;
   endsplit
+  
+|User|
 split again
   :User chooses to view activity history;
+  
+  |System|
   :System displays login records, operation logs;
 endsplit
+
+|User|
 :User exits Personal Center;
 stop
 

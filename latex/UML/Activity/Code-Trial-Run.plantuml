@@ -1,15 +1,20 @@
 @startuml
 title Activity Diagram: Code Trial Run
 
+|User|
 start
 :User inputs code snippet;
 :User selects programming language and environment;
 :User (optionally) sets runtime parameters;
 :User clicks "Run Trial";
+
+|System|
 :System creates secure sandbox environment;
 :System executes code;
 :System captures runtime results, console output, error messages;
 :Display results/output/errors to user in real-time;
+
+|User|
 stop
 
 @enduml

@@ -1,0 +1,61 @@
+// Filename: CodeGenerationSequenceDiagram.plantuml
+@startuml
+title Sequence Diagram: Code Generation Interaction
+
+actor User
+participant "Code Editor UI" as EditorUI
+participant "System Backend" as Backend
+participant "RAG Module" as RAG
+participant "LLM" as LLM
+participant "Code Analysis Module" as Analyzer
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam maxmessagesize 150
+skinparam sequenceParticipant bold
+
+User -> EditorUI : Input Natural Language Requirement
+activate EditorUI
+User -> EditorUI : (Optional) Specify Language, Framework, etc.
+User -> EditorUI : Trigger Code Generation Action
+EditorUI -> Backend : Submit Generation Request (Requirement, ?Params)
+deactivate EditorUI
+activate Backend
+
+Backend -> RAG : Retrieve Context based on Requirement
+activate RAG
+note right of RAG : Finds relevant docs, code examples
+RAG --> Backend : Retrieved Context Data
+deactivate RAG
+
+Backend -> LLM : Generate Code (Requirement + Context)
+activate LLM
+LLM --> Backend : Generated Code Draft
+deactivate LLM
+
+Backend -> Analyzer : Validate/Analyze Generated Code
+activate Analyzer
+note right of Analyzer : Checks syntax, static analysis
+Analyzer --> Backend : Validation Result / Potentially Improved Code
+deactivate Analyzer
+
+Backend --> EditorUI : Send Final Code (Formatted)
+deactivate Backend
+activate EditorUI
+EditorUI -> User : Display Generated Code (with syntax highlighting)
+deactivate EditorUI
+
+' Optional Follow-up Loop '
+User -> EditorUI : Request Explanation / Edit / Request Adjustment
+activate EditorUI
+EditorUI -> Backend : Submit Follow-up Request
+deactivate EditorUI
+activate Backend
+note right of Backend : Further processing involving\nLLM, RAG, Analyzer as needed...
+Backend --> EditorUI : Send Updated Code / Explanation
+deactivate Backend
+activate EditorUI
+EditorUI -> User : Display Result
+deactivate EditorUI
+
+@enduml

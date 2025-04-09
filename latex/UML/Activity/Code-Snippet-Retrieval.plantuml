@@ -1,9 +1,12 @@
 @startuml
 title Activity Diagram: Code Snippet Retrieval
 
+|User|
 start
 :User sets code snippet;
 :User enables code retrieval feature;
+
+|System|
 :System checks if code snippet is valid (e.g., not empty);
 if (Is code snippet valid?) then (Yes)
   :System reads snippet content;
@@ -14,6 +17,8 @@ if (Is code snippet valid?) then (Yes)
 else (No)
   :Prompt user: "Invalid code snippet";
 endif
+
+|User|
 stop
 
 @enduml

@@ -1,8 +1,11 @@
 @startuml
 title Activity Diagram: Performance Bottleneck Analysis
 
+|User|
 start
 :User submits code;
+
+|System|
 :System performs static analysis;
 :System performs simulated run;
 :System identifies potential performance bottlenecks (algorithm, memory leak, resource contention, etc.);
@@ -10,6 +13,8 @@ start
 :Report highlights key code locations;
 :System provides corresponding optimization solutions;
 :Display performance report and solutions to user;
+
+|User|
 stop
 
 @enduml

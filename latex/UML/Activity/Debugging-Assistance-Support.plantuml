@@ -1,12 +1,15 @@
 @startuml
 title Activity Diagram: Debugging Assistance Support
 
+|User|
 start
 :User starts debugging session for code;
 repeat
   :User sets/removes breakpoints;
   :User inspects/modifies variables;
   :User chooses debug action (step, continue, etc.);
+  
+  |System|
   :System executes code to next breakpoint or step;
   :System displays execution flow and data changes in real-time;
   partition RAG Assistance {
@@ -16,6 +19,8 @@ repeat
         :Display suggestions to user;
     endif
   }
+  
+  |User|
 repeat while (User continues debugging?) is (Yes) not (No)
 :User ends debugging session;
 stop

@@ -1,0 +1,87 @@
+// Filename: ModelSwitchingSequenceDiagram.plantuml
+@startuml
+title Sequence Diagram: Model Switching Interaction
+
+actor User
+participant "System UI / Client" as UI
+participant "System Backend" as Backend
+participant "Model Management Service" as MMS
+participant "Resource Manager" as RM
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam maxmessagesize 150
+skinparam sequenceParticipant bold
+
+User -> UI : Click Model Selection Area
+activate UI
+UI -> Backend : Request Available Models List
+activate Backend
+Backend -> MMS : Get Available Models + Info
+activate MMS
+MMS --> Backend : Return Models List (Names, Features, etc.)
+deactivate MMS
+Backend --> UI : Send Models List
+deactivate Backend
+UI -> User : Display Available Models List
+deactivate UI
+
+User -> UI : Select Target Model from List
+activate UI
+UI -> Backend : Submit Model Switch Request (Selected Model Name)
+deactivate UI
+activate Backend
+
+Backend -> MMS : Initiate Model Switch to [Selected Model Name]
+activate MMS
+
+' Optional: Resource Check / Unload Old Model '
+MMS -> RM : Check/Request Resources for [Selected Model Name]
+activate RM
+RM --> MMS : Resource Status / Allocation Confirmation
+deactivate RM
+opt Current Model Needs Unloading
+    MMS -> MMS : Unload Current Model
+    MMS -> RM : Release Resources of Old Model
+    activate RM
+    RM --> MMS : Resource Release Confirmation
+    deactivate RM
+end
+
+' Load New Model '
+MMS -> MMS : Load / Initialize [Selected Model Name]
+note right of MMS : Loading process starts...
+opt Show Loading Progress
+    MMS --> Backend : Loading Progress Update
+    Backend --> UI : Forward Loading Progress
+    activate UI
+    UI -> User : Display Loading Indicator / Progress
+    deactivate UI
+end
+MMS --> Backend : Model Switch Complete Notification
+deactivate MMS
+
+' Adjust Settings & Confirm '
+Backend -> MMS : Adjust Default Parameters for New Model
+activate MMS
+MMS --> Backend : Parameter Adjustment Confirmation
+deactivate MMS
+Backend --> UI : Confirm Switch Complete & Update UI State
+deactivate Backend
+activate UI
+UI -> User : Show Switch Confirmation & Update Active Model Display
+deactivate UI
+
+' Optional: Parameter Tuning by User '
+User -> UI : Access Model Details / Adjust Parameters
+activate UI
+UI -> Backend : Submit Parameter Changes
+deactivate UI
+activate Backend
+Backend -> MMS : Apply Parameter Changes to Active Model
+activate MMS
+MMS --> Backend : Parameter Change Confirmation
+deactivate MMS
+deactivate Backend
+
+@enduml

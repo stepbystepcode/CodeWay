@@ -964,9 +964,9 @@ b. 服务器上应该配备的软件：
     
     用户通过设置文档URL，并开启文档检索功能，即可实现文档URL精确检索。系统会检查用户设置的文档URL是否符合要求，然后检查文档是否已经存储在系统的向量数据库中。如果文档不存在，系统会提示用户添加文档。如果文档存在，系统会启用QA问答功能，为用户提供文档内容的详细回答。
     如果文档不存在，系统会开始文档添加流程，包括文档内容的提取、向量化存储等。活动图如图 11 所示。
-    \begin{figure}[h] % 创建一个图片环境，[h]表示图片尽量放在当前位置
+    \begin{figure}[H] % 使用[H]确保图片放在当前位置
         \centering % 使图片居中
-        \includegraphics[width=0.8\textwidth]{UML/Activity/Precise-Document-URL-Retrieval.png}
+        \includegraphics[width=0.7\textwidth]{UML/Activity/Precise-Document-URL-Retrieval.png}
         \caption{文档添加活动图} % 添加图片标题
         \label{fig:DocumentAdditionActivityDiagram} % 为图片添加标签，方便在文档中引用
     \end{figure}
@@ -974,9 +974,9 @@ b. 服务器上应该配备的软件：
     \item 代码片段检索
     
     用户通过设置代码片段，并开启代码检索功能，即可实现代码片段检索。系统会检查用户设置的代码片段是否符合要求，然后读取代码片段内容，并分析代码片段的语义。给出详尽且切实可行的优化方案。系统采用先进的嵌入向量技术，能够理解代码的上下文关系，识别出代码中的模式和结构，从而提供准确的检索结果。
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\textwidth]{UML/Activity/Code-Snippet-Retrieval.png}
+        \includegraphics[width=0.7\textwidth]{UML/Activity/Code-Snippet-Retrieval.png}
         \caption{代码片段检索流程图}
         \label{fig:CodeSnippetRetrievalFlow}
     \end{figure}
@@ -984,9 +984,9 @@ b. 服务器上应该配备的软件：
     \item 智能代码生成
 
     用户输入自然语言描述的编程需求或问题，系统利用RAG技术检索相关文档和代码示例，结合大语言模型进行推理，生成符合最新技术规范且准确无误的代码片段。系统支持多种编程语言，包括但不限于Python、JavaScript、Java、C++等，能够根据用户的具体需求，生成各类功能模块的代码实现。生成的代码会自动包含必要的注释和错误处理机制，提高代码可读性和健壮性。
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\textwidth]{UML/Activity/Intelligent-Code-Generation.png}
+        \includegraphics[width=0.7\textwidth]{UML/Activity/Intelligent-Code-Generation.png}
         \caption{智能代码生成流程}
         \label{fig:IntelligentCodeGeneration}
     \end{figure}
@@ -994,9 +994,9 @@ b. 服务器上应该配备的软件：
     \item 代码优化建议
     
     系统对用户提交的代码进行多维度分析，包括时间复杂度、空间复杂度、代码风格、设计模式应用等方面，识别可优化的部分，并提供具体的优化建议。系统基于大量真实项目的最佳实践案例库，结合RAG技术检索到的相关优化模式，为用户提供针对性的代码重构和优化策略，帮助用户提升代码质量和运行效率。
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\textwidth]{UML/Activity/Code-Optimization-Suggestions.png}
+        \includegraphics[width=0.7\textwidth]{UML/Activity/Code-Optimization-Suggestions.png}
         \caption{代码优化建议流程}
         \label{fig:CodeOptimizationSuggestions}
     \end{figure}
@@ -1004,9 +1004,9 @@ b. 服务器上应该配备的软件：
     \item 性能瓶颈分析
     
     针对用户提交的代码，系统通过静态分析与模拟运行相结合的方式，识别代码中可能存在的性能瓶颈，如算法效率低下、内存泄漏、资源竞争等问题。系统会生成详细的性能分析报告，标注出影响性能的关键代码位置，并提供相应的优化方案。对于复杂系统，还能够进行全局性能评估，协助用户制定系统性能提升策略。
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\textwidth]{UML/Activity/Performance-Bottleneck-Analysis.png}
+        \includegraphics[width=0.7\textwidth]{UML/Activity/Performance-Bottleneck-Analysis.png}
         \caption{性能瓶颈分析流程}
         \label{fig:PerformanceBottleneckAnalysis}
     \end{figure}
@@ -1014,9 +1014,9 @@ b. 服务器上应该配备的软件：
     \item 代码试运行
     
     用户可在系统内输入代码片段，选择目标编程语言及运行环境，点击试运行按钮后，系统会创建一个安全的沙箱环境，迅速执行代码，并将运行结果、控制台输出以及可能出现的错误信息实时反馈给用户。系统支持设置运行参数，如输入值、环境变量等，使用户能够在不同条件下测试代码行为，验证代码逻辑是否符合预期。
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\textwidth]{UML/Activity/Code-Trial-Run.png}
+        \includegraphics[width=0.7\textwidth]{UML/Activity/Code-Trial-Run.png}
         \caption{代码试运行系统架构}
         \label{fig:CodeTrialRunSystem}
     \end{figure}
@@ -1024,9 +1024,9 @@ b. 服务器上应该配备的软件：
     \item 错误检测纠正
     
     当代码试运行出现错误时，系统自动启动错误检测与纠正机制。系统会分析错误类型、出错位置及上下文环境，通过与类似错误案例的匹配及RAG技术检索相关解决方案，为用户提供详细的错误解释及修正建议。针对常见错误，系统甚至可以自动生成修复后的代码，用户只需确认即可应用修复。系统还会记录错误及修复方案，不断丰富错误处理知识库。
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\textwidth]{UML/Activity/Error-Detection-and-Correction.png}
+        \includegraphics[width=0.7\textwidth]{UML/Activity/Error-Detection-and-Correction.png}
         \caption{错误检测纠正流程}
         \label{fig:ErrorDetectionCorrection}
     \end{figure}
@@ -1034,9 +1034,9 @@ b. 服务器上应该配备的软件：
     \item 调试辅助支持
     
     系统提供强大的调试辅助功能，帮助用户快速定位和解决代码问题。用户可以设置断点、查看变量状态、执行单步调试等操作，系统会实时显示程序执行流程和数据变化。结合RAG技术，系统能够识别调试过程中的异常状态，并推荐可能的调试策略，如查看特定变量、检查特定函数调用等。系统还支持条件断点和日志点设置，方便用户针对复杂场景进行精细调试。
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\textwidth]{UML/Activity/Debugging-Assistance-Support.png}
+        \includegraphics[width=0.7\textwidth]{UML/Activity/Debugging-Assistance-Support.png}
         \caption{调试辅助支持功能示意图}
         \label{fig:DebuggingAssistance}
     \end{figure}
@@ -1044,9 +1044,9 @@ b. 服务器上应该配备的软件：
     \item 模型切换
     
     用户可在系统界面便捷地切换内置的多个模型，如OpenAI gpt-4o、Qwen-2.5-70B-Instruct等。系统会显示各模型的基本参数、适用场景和性能特点，帮助用户根据具体需求选择最适合的模型。切换模型后，系统会自动调整相关参数设置，以优化所选模型的性能表现。对于高级用户，系统还提供模型参数微调功能，可以根据特定任务对模型行为进行个性化调整。
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\textwidth]{UML/Activity/Model-Switching.png}
+        \includegraphics[width=0.7\textwidth]{UML/Activity/Model-Switching.png}
         \caption{模型切换界面示意图}
         \label{fig:ModelSwitchingInterface}
     \end{figure}
@@ -1054,9 +1054,9 @@ b. 服务器上应该配备的软件：
     \item 自定义模型配置
     
     系统支持用户自主调用Hugging Face平台上的其他模型，满足不同用户对模型性能、风格和专业性的多样化需求。用户可以指定模型名称、版本，并配置相关参数，如温度系数、采样方式、最大输出长度等。系统会处理API调用、模型加载和资源分配，确保自定义模型能够高效稳定地运行。对于专业用户，系统还支持模型微调和参数优化，以适应特定领域的任务需求。
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\textwidth]{UML/Activity/Custom-Model-Configuration.png}
+        \includegraphics[width=0.7\textwidth]{UML/Activity/Custom-Model-Configuration.png}
         \caption{自定义模型配置流程}
         \label{fig:CustomModelConfiguration}
     \end{figure}
@@ -1064,29 +1064,29 @@ b. 服务器上应该配备的软件：
     \item 用户注册
     
     用户通过填写基本信息（如用户名、邮箱）并设置密码来创建账号。系统会验证用户提供的信息有效性，检查用户名是否已被占用，邮箱是否合法等。注册成功后，系统会发送验证邮件，用户完成验证后即可激活账号。
-    % \begin{figure}[h]
-    %     \centering
-    %     \includegraphics[width=0.8\textwidth]{UML/Squence/signup.png}
-    %     \caption{用户注册流程}
-    %     \label{fig:UserRegistrationFlow}
-    % \end{figure}
-    
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{UML/Activity/signup.png}
+        \caption{用户注册流程}
+        \label{fig:UserRegistrationFlow}
+    \end{figure}
+     
     \item 用户登录
     
     用户通过输入注册时使用的账号（邮箱）和密码进行身份验证，系统验证信息无误后允许用户访问个人账号。系统支持记住登录状态功能，用户可选择在特定设备上保持登录状态，免去频繁登录的麻烦。对于安全敏感的操作，系统会要求用户进行二次验证，如输入验证码、回答安全问题等。
-    % \begin{figure}[h]
-    %     \centering
-    %     \includegraphics[width=0.8\textwidth]{UML/Squence/login.png}
-    %     \caption{用户登录流程}
-    %     \label{fig:UserLoginProcess}
-    % \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{UML/Activity/login.png}
+        \caption{用户登录流程}
+        \label{fig:UserLoginProcess}
+    \end{figure}
     
     \item 个人信息管理
     
     用户可在个人中心查看、修改自己的基本信息，包括昵称、密码、邮箱等。系统提供个人资料完整度提示，鼓励用户完善信息以获得更好的服务体验。用户可以管理自己的账号安全设置，如修改密码、绑定邮箱等。% 系统还支持查看账号活动历史，包括登录记录、操作日志等，帮助用户监控账号安全状态，及时发现异常情况。
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\textwidth]{UML/Activity/Personal-Information-Management.png}
+        \includegraphics[width=0.7\textwidth]{UML/Activity/Personal-Information-Management.png}
         \caption{个人信息管理界面}
         \label{fig:PersonalInfoManagement}
     \end{figure}
@@ -1094,9 +1094,9 @@ b. 服务器上应该配备的软件：
     \item 个性化偏好设置
     
     用户可根据自身习惯和需求，定制系统的各项参数和功能展示。可设置的偏好包括界面主题（明亮/暗黑模式）、代码编辑器风格、默认编程语言、常用代码模板等。用户还可以调整系统的交互方式，如是否自动运行代码、是否显示详细错误信息、代码提示的触发方式等。系统会记住这些设置并在用户每次登录时自动应用，同时支持设置导出与导入，方便用户在多设备间同步偏好配置。
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\textwidth]{UML/Activity/Personalized-Preference-Settings.png}
+        \includegraphics[width=0.7\textwidth]{UML/Activity/Personalized-Preference-Settings.png}
         \caption{个性化偏好设置页面}
         \label{fig:PersonalizedPreferences}
     \end{figure}
@@ -1112,24 +1112,24 @@ b. 服务器上应该配备的软件：
     文档URL精确检索的交互流程始于用户在系统界面输入文档URL，系统接收并验证URL有效性。若URL有效，系统查询向量数据库确认该文档是否已存储。对于已存储的文档，系统直接呈现与文档相关的交互界面，允许用户输入问题进行精确查询；系统内部会调用RAG引擎，将用户问题与文档内容进行语义匹配，返回最相关的回答。
     
     若文档未存储，系统弹出确认对话框，征求用户是否添加该文档。用户确认后，系统启动文档爬取与处理模块，解析网页内容、提取文本、分割文档并进行向量化处理，最终存入向量数据库。处理完成后，系统通知用户，并转入问答交互界面。整个交互过程以图形界面提示和进度反馈为主，确保用户了解当前操作状态。
-    % \begin{figure}[h]
-    %     \centering
-    %     \includegraphics[width=0.8\textwidth]{figures/DocumentRetrievalSequenceDiagram.pdf}
-    %     \caption{文档URL精确检索时序图}
-    %     \label{fig:DocumentRetrievalSequenceDiagram}
-    % \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{UML/Squence/DocumentRetrievalSequenceDiagram.png}
+        \caption{文档URL精确检索时序图}
+        \label{fig:DocumentRetrievalSequenceDiagram}
+    \end{figure}
     
     \item 代码生成交互模型
     
     智能代码生成交互流程开始于用户在编辑器中输入自然语言描述的编程需求。用户可以指定目标编程语言、框架及其他相关参数，然后触发代码生成请求。系统接收请求后，会将用户需求传递给RAG处理模块，该模块首先检索相关技术文档和代码案例，提取有价值的参考信息。
     
     接着，系统将检索结果与用户需求一同传递给大模型推理引擎，由其生成初步代码。系统对生成的代码进行静态分析和语法检查，确保其符合目标语言规范且无明显错误。最终，系统将优化后的代码返回给用户界面，以编辑器友好的格式呈现，包括语法高亮、代码缩进等。用户可以直接编辑生成的代码，或请求系统解释特定代码段，或要求系统基于反馈进行代码调整。
-    % \begin{figure}[h]
-    %     \centering
-    %     \includegraphics[width=0.8\textwidth]{figures/CodeGenerationSequenceDiagram.pdf}
-    %     \caption{智能代码生成时序图}
-    %     \label{fig:CodeGenerationSequenceDiagram}
-    % \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{UML/Squence/CodeGenerationSequenceDiagram.png}
+        \caption{智能代码生成时序图}
+        \label{fig:CodeGenerationSequenceDiagram}
+    \end{figure}
     
     \item 代码试运行交互模型
     
@@ -1138,12 +1138,12 @@ b. 服务器上应该配备的软件：
     验证通过后，系统创建隔离的沙箱环境，配置必要的运行时依赖，并将代码注入环境中执行。执行过程中，系统实时捕获标准输出、错误输出和运行状态，在界面上显示执行进度。当代码运行完成或遇到错误时，系统收集所有输出信息和错误堆栈，格式化后呈现给用户。
     
     若执行过程中出现错误，系统自动启动错误分析模块，识别错误类型并提供修复建议。对于常见错误模式，系统可直接提供修复后的代码示例。用户可查看详细的运行日志，并基于系统建议修改代码再次尝试运行，形成迭代优化的交互循环。
-    % \begin{figure}[h]
-    %     \centering
-    %     \includegraphics[width=0.8\textwidth]{figures/CodeRunSequenceDiagram.pdf}
-    %     \caption{代码试运行时序图}
-    %     \label{fig:CodeRunSequenceDiagram}
-    % \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{UML/Squence/CodeRunSequenceDiagram.png}
+        \caption{代码试运行时序图}
+        \label{fig:CodeRunSequenceDiagram}
+    \end{figure}
     
     \item 模型切换交互模型
     
@@ -1152,12 +1152,12 @@ b. 服务器上应该配备的软件：
     系统首先检查选定模型的资源状态，判断是否需要加载或初始化。对于已加载的模型，系统直接切换API调用目标；对于未加载的模型，系统先释放当前模型占用资源，然后加载新模型到内存。加载过程中，界面显示加载进度条，并提示用户稍候。
     
     模型切换完成后，系统自动调整配置参数以优化所选模型的表现，并更新界面状态指示当前激活的模型。用户可以在模型详情面板查看和调整各项参数，如推理温度、最大输出长度等，系统即时应用这些设置，并在下一次交互中生效。
-    % \begin{figure}[h]
-    %     \centering
-    %     \includegraphics[width=0.8\textwidth]{figures/ModelSwitchingSequenceDiagram.pdf}
-    %     \caption{模型切换时序图}
-    %     \label{fig:ModelSwitchingSequenceDiagram}
-    % \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{UML/Squence/ModelSwitchingSequenceDiagram.png}
+        \caption{模型切换时序图}
+        \label{fig:ModelSwitchingSequenceDiagram}
+    \end{figure}
     
     \item 用户注册与登录交互模型
     
@@ -1166,13 +1166,13 @@ b. 服务器上应该配备的软件：
     用户通过邮件中的验证链接或直接输入验证码完成邮箱验证。验证成功后，系统激活用户账号，并自动将用户重定向到登录页面或直接登录到系统首页，同时展示欢迎消息和基本使用指引。
     
     用户登录交互则从登录页面开始，用户输入邮箱和密码后，系统验证凭据的有效性。验证通过后，系统生成授权令牌，设置会话状态，并将用户重定向到系统主界面。如用户开启了记住登录选项，系统会设置持久化的登录凭证，使用户在下次访问时无需重新登录。整个过程中，系统提供清晰的状态反馈，确保用户了解每一步的结果。
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
         \includegraphics[width=0.8\textwidth]{UML/Squence/login.png}
         \caption{用户登录时序图}
         \label{fig:UserLoginSequenceDiagram}
     \end{figure}
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
         \includegraphics[width=0.8\textwidth]{UML/Squence/signup.png}
         \caption{用户注册时序图}

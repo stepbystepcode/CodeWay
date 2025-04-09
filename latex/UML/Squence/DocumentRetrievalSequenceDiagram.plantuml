@@ -1,0 +1,88 @@
+// Filename: DocumentRetrievalSequenceDiagram.plantuml
+@startuml
+title Sequence Diagram: Precise Document URL Retrieval Interaction
+
+actor User
+participant "System UI / Client" as UI
+participant "System Backend" as Backend
+participant "URL Validator" as Validator
+database "Vector Database (VDB)" as VDB
+participant "RAG Engine" as RAG
+participant "Document Processing Module" as DocProcessor
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam maxmessagesize 150
+skinparam sequenceParticipant bold
+
+User -> UI : Input Document URL
+activate UI
+UI -> Backend : Submit URL for retrieval
+activate Backend
+
+Backend -> Validator : Validate URL Format
+activate Validator
+Validator --> Backend : Validation Result (Valid/Invalid)
+deactivate Validator
+
+alt URL Invalid
+    Backend --> UI : Send Error Message ("Invalid URL")
+    deactivate Backend
+    UI -> User : Display Error Message
+    deactivate UI
+else URL Valid
+    Backend -> VDB : Check if Document URL exists
+    activate VDB
+    VDB --> Backend : Existence Result (Exists / Not Exists)
+    deactivate VDB
+
+    alt Document Exists in VDB
+        Backend --> UI : Present QA Interface for Document
+        deactivate Backend
+        UI -> User : Show QA Interface
+        deactivate UI
+
+        User -> UI : Input Query related to document
+        activate UI
+        UI -> Backend : Submit Query for specific document
+        activate Backend
+        Backend -> RAG : Process Query using Document Context
+        activate RAG
+        note right of RAG : Retrieves context implicitly from VDB based on URL
+        RAG --> Backend : Relevant Answer
+        deactivate RAG
+        Backend --> UI : Send Answer
+        deactivate Backend
+        UI -> User : Display Answer
+        deactivate UI
+
+    else Document Does Not Exist in VDB
+        Backend --> UI : Prompt User: "Add this document?"
+        UI -> User : Show Confirmation Dialog ("Add Document?")
+        deactivate UI
+
+        User -> UI : Confirm Add Document
+        activate UI
+        UI -> Backend : User Confirmation Received
+        Backend --> UI : Show Processing Feedback ("Processing...")
+        UI -> User : Display "Processing Document..."
+
+        Backend -> DocProcessor : Start Document Processing for URL
+        activate DocProcessor
+        note right of DocProcessor : Fetch content\nParse & Extract Text\nChunk Document\nVectorize Chunks
+        DocProcessor -> VDB : Store Document Vectors
+        activate VDB
+        VDB --> DocProcessor : Storage Confirmation
+        deactivate VDB
+        DocProcessor --> Backend : Document Processing Complete
+        deactivate DocProcessor
+
+        Backend --> UI : Notify Complete, Present QA Interface
+        deactivate Backend
+        UI -> User : Display "Processing Complete", Show QA Interface
+        deactivate UI
+        ' QA Interaction can follow here similar to the "Document Exists" path '
+    end
+end
+
+@enduml

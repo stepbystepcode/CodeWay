@@ -1,0 +1,69 @@
+// Filename: CodeRunSequenceDiagram.plantuml
+@startuml
+title Sequence Diagram: Code Trial Run Interaction
+
+actor User
+participant "Code Editor UI" as EditorUI
+participant "System Backend" as Backend
+participant "Code Analysis Module" as SyntaxChecker
+participant "Sandbox Environment" as Sandbox
+participant "Error Analysis Module" as ErrorAnalyzer
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam maxmessagesize 150
+skinparam sequenceParticipant bold
+
+User -> EditorUI : Input or Modify Code
+activate EditorUI
+User -> EditorUI : Select Language / Environment
+User -> EditorUI : Click "Run" Button
+EditorUI -> Backend : Submit Run Request (Code, Lang/Env)
+deactivate EditorUI
+activate Backend
+
+Backend -> SyntaxChecker : Basic Syntax Check
+activate SyntaxChecker
+SyntaxChecker --> Backend : Syntax Check Result (OK / Error)
+deactivate SyntaxChecker
+
+alt Syntax Error
+    Backend --> EditorUI : Send Syntax Error Details
+    deactivate Backend
+    activate EditorUI
+    EditorUI -> User : Display Syntax Error
+    deactivate EditorUI
+else Syntax OK
+    Backend -> Sandbox : Create Sandbox & Execute Code
+    activate Sandbox
+    note right of Sandbox : Execution starts...
+    loop Real-time Feedback
+        Sandbox --> Backend : Stream Output / Status / Errors
+        Backend --> EditorUI : Forward Output / Status / Errors
+        activate EditorUI
+        EditorUI -> User : Display Output / Progress / Errors
+        deactivate EditorUI
+    end
+    Sandbox --> Backend : Execution Finished (Final Result / Error Stack)
+    deactivate Sandbox
+
+    Backend --> EditorUI : Send Final Results / Formatted Errors
+    activate EditorUI
+    EditorUI -> User : Display Final Results / Formatted Errors
+    deactivate EditorUI
+
+    opt Error Occurred During Execution
+        Backend -> ErrorAnalyzer : Analyze Error (Stack Trace, Context)
+        activate ErrorAnalyzer
+        ErrorAnalyzer --> Backend : Analysis Result (Type, Suggestions, ?Fix)
+        deactivate ErrorAnalyzer
+        Backend --> EditorUI : Send Error Analysis / Suggestions / ?Fix
+        activate EditorUI
+        EditorUI -> User : Display Error Details and Suggestions
+        deactivate EditorUI
+        note right of User : User may edit code and retry
+    end
+    deactivate Backend
+end
+
+@enduml

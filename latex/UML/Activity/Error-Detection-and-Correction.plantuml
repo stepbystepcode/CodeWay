@@ -1,6 +1,7 @@
 @startuml
 title Activity Diagram: Error Detection and Correction
 
+|System|
 start
 -> Code Trial Run Fails;
 :System analyzes error type, location, context;
@@ -13,15 +14,27 @@ partition RAG & Case Matching {
 if (Can system auto-generate fix?) then (Yes)
   :System generates fixed code;
   :Display suggested fix and code to user;
+  
+  |User|
   if (User confirms applying fix?) then (Yes)
+    
+    |System|
     :Apply automated fix;
   else (No)
+    
+    |User|
     :User reviews suggestions, handles manually;
   endif
 else (No)
+  
+  |System|
   :Display error explanation and suggestions to user;
-   :User reviews suggestions, handles manually;
+  
+  |User|
+  :User reviews suggestions, handles manually;
 endif
+
+|System|
 :System logs error and solution to knowledge base;
 stop
 

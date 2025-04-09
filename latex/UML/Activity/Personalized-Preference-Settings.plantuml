@@ -1,0 +1,25 @@
+@startuml
+title Activity Diagram: Personalized Preference Settings
+
+start
+:User enters Preference Settings interface;
+:System displays setting categories (Theme, Editor, Language, Interaction, etc.);
+repeat
+  :User selects a setting category;
+  :User modifies specific preferences (e.g., select Dark Mode, set default language);
+  :User saves settings;
+  :System applies and stores user preferences;
+repeat while (User continues modifying other settings?) is (Yes) not (No)
+split
+ :User chooses "Export Settings";
+ :System generates configuration file;
+ :Provide file for user download;
+split again
+ :User chooses "Import Settings";
+ :User uploads configuration file;
+ :System validates and applies configuration;
+endsplit
+:User exits Settings interface;
+stop
+
+@enduml

@@ -1,0 +1,114 @@
+@startuml
+title User Sign Up Sequence Diagram
+
+actor User
+participant Browser as Client
+participant "Application Server" as Server
+database Database as DB
+participant "Email Service" as EmailSvc
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam maxmessagesize 150
+skinparam sequenceParticipant bold
+
+== Initial Sign Up Details ==
+User -> Client : Enters Email, Password, Confirm Password
+activate Client
+Client -> Server : POST /signup (email, password, confirmPassword)
+activate Server
+note right of Server: Receives initial sign-up data.
+
+alt Passwords Do Not Match
+    Server --> Client : HTTP 400 Bad Request (Passwords don't match)
+    deactivate Server
+    Client -> User : Display Error: "Passwords do not match"
+    deactivate Client
+else Passwords Match
+    Server -> DB : Check if email already exists
+    activate DB
+    DB --> Server : Email exists / does not exist
+    deactivate DB
+
+    alt Email Already Exists
+        Server --> Client : HTTP 409 Conflict (Email already registered)
+        deactivate Server
+        Client -> User : Display Error: "Email already in use"
+        deactivate Client
+    else Email is New
+        Server -> Server : Generate Verification Code
+        Server -> Server : Hash Password
+        Server -> DB : Store temporary user data (email, hashed pass, code, expiry)
+        activate DB
+        note right of DB: Temporarily stores data pending verification.
+        DB --> Server : Temporary data stored confirmation
+        deactivate DB
+
+        Server -> EmailSvc : Send Verification Code to User's Email
+        activate EmailSvc
+        note right of EmailSvc: Email Service prepares and sends the email.
+        EmailSvc --> Server : Email Sent Confirmation (or failure)
+        deactivate EmailSvc
+        ' Assuming email sent successfully '
+        Server --> Client : HTTP 200 OK (Verification code sent)
+        deactivate Server
+        Client -> User : Display Message: "Check your email for a verification code"
+        deactivate Client
+    end
+end
+
+== Email Verification ==
+User -> Client : Enters Verification Code received via Email
+activate Client
+Client -> Server : POST /verify-code (email, verificationCode)
+activate Server
+note right of Server: Receives verification code submission.
+
+Server -> DB : Retrieve temporary data & code for email
+activate DB
+DB --> Server : Return temporary data (or not found/expired)
+deactivate DB
+
+alt Code Valid and Not Expired
+    Server -> Server : Mark email as potentially verified (awaiting username)
+    Server --> Client : HTTP 200 OK (Code Verified, prompt for username)
+    deactivate Server
+    Client -> User : Prompt for Username
+    deactivate Client
+else Code Invalid or Expired
+    Server --> Client : HTTP 400 Bad Request (Invalid or expired code)
+    deactivate Server
+    Client -> User : Display Error: "Invalid or expired verification code"
+    deactivate Client
+end
+
+== Profile Setup & Completion ==
+User -> Client : Enters Desired Username
+activate Client
+Client -> Server : POST /complete-profile (email, username) ' email or session identifier '
+activate Server
+note right of Server: Receives username for final setup.
+
+Server -> DB : Check if username is available
+activate DB
+DB --> Server : Username available / taken
+deactivate DB
+
+alt Username Available
+    Server -> DB : Create Permanent User Account (update temp record: add username, mark verified)
+    activate DB
+    note right of DB: Finalizes user creation / updates record.
+    DB --> Server : User Account Created/Updated Confirmation
+    deactivate DB
+    Server --> Client : HTTP 201 Created (Sign Up Successful)
+    deactivate Server
+    Client -> User : Display Message: "Sign up successful! You can now log in."
+    deactivate Client
+else Username Taken
+    Server --> Client : HTTP 409 Conflict (Username already taken)
+    deactivate Server
+    Client -> User : Display Error: "Username is already taken"
+    deactivate Client
+end
+
+@enduml

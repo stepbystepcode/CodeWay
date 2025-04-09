@@ -1,0 +1,23 @@
+@startuml
+title Activity Diagram: Debugging Assistance Support
+
+start
+:User starts debugging session for code;
+repeat
+  :User sets/removes breakpoints;
+  :User inspects/modifies variables;
+  :User chooses debug action (step, continue, etc.);
+  :System executes code to next breakpoint or step;
+  :System displays execution flow and data changes in real-time;
+  partition RAG Assistance {
+    if (Abnormal state detected?) then (Yes)
+        :System identifies anomaly;
+        :System recommends debugging strategies (e.g., check variable, check function call);
+        :Display suggestions to user;
+    endif
+  }
+repeat while (User continues debugging?) is (Yes) not (No)
+:User ends debugging session;
+stop
+
+@enduml

@@ -1,0 +1,19 @@
+@startuml
+title Activity Diagram: Custom Model Configuration
+
+start
+:User chooses to use custom Hugging Face model;
+:User specifies model name/version;
+:User configures relevant parameters (temperature, sampling, max length, etc.);
+:System validates user input and configuration;
+if (Is configuration valid?) then (Yes)
+  :System handles API call, model loading, resource allocation;
+  :System confirms successful custom model setup;
+else (No)
+  :Display configuration error message;
+  :Request user to correct configuration;
+  --> :User specifies model name/version;
+endif
+stop
+
+@enduml

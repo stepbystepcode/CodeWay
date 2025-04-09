@@ -1,0 +1,16 @@
+@startuml
+title Activity Diagram: Intelligent Code Generation
+
+start
+:User inputs programming requirement in natural language;
+partition RAG Process {
+  :System retrieves relevant documents;
+  :System retrieves relevant code examples;
+}
+:System performs inference using LLM;
+:System generates code snippet (with comments, error handling);
+:System supports multiple programming languages;
+:Display generated code to user;
+stop
+
+@enduml

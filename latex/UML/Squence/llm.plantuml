@@ -1,0 +1,107 @@
+@startuml
+title Agent System Sequence Diagram (RAG, Function Calling, MCP Tools)
+
+actor User
+participant "System Interface" as SI
+participant "Agent Core / Orchestrator" as Agent
+participant "LLM (for Planning & Response)" as LLM
+database "Vector Database (Cache)" as VDB
+participant "RAG Pipeline" as RAG
+participant "Function Handler" as FuncHandler
+participant "External Tool (e.g., MCP)" as ExternalTool
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam maxmessagesize 200
+skinparam sequenceParticipant bold
+skinparam BoxPadding 30
+
+User -> SI : Submit Query (potentially with Document URL(s))
+activate SI
+SI -> Agent : Process User Request (query, ?urls)
+activate Agent
+
+Agent -> LLM : Plan Execution Strategy (query, available_tools, ?urls)
+activate LLM
+note right of LLM : LLM determines if direct answer,\nRAG, or function call is needed.
+LLM --> Agent : Execution Plan (e.g., use_rag, call_function['tool_name', args], direct_answer)
+deactivate LLM
+
+alt Plan: Use Function Call
+    Agent -> FuncHandler : Execute Tool[tool_name] with args
+    activate FuncHandler
+    note right of Agent : Agent identified need for specific tool (e.g., MCP Tool).
+    FuncHandler -> ExternalTool : API Call (request based on args)
+    activate ExternalTool
+    ExternalTool --> FuncHandler : API Response (tool result data)
+    deactivate ExternalTool
+    FuncHandler --> Agent : Tool Result [tool_name, result_data]
+    deactivate FuncHandler
+
+    Agent -> LLM : Generate Response (original_query, tool_result_data)
+    activate LLM
+    note right of LLM : LLM formats tool result into natural language answer.
+    LLM --> Agent : Synthesized Answer based on Tool Result
+    deactivate LLM
+    Agent --> SI : Final Answer
+    deactivate Agent
+    SI --> User : Display Answer (incorporating tool results)
+    deactivate SI
+
+else Plan: Use RAG (Documents URL provided or query implies knowledge base search)
+    Agent -> VDB : Check Cache: Embeddings exist for URL(s)?
+    activate VDB
+    VDB --> Agent : Cache Status (Hit / Miss)
+    deactivate VDB
+
+    alt Cache Hit (Embeddings Found)
+        Agent -> VDB : Retrieve relevant context for query
+        activate VDB
+        VDB --> Agent : Return relevant document chunks (context)
+        deactivate VDB
+        ' Context retrieved, proceed to LLM for synthesis '
+
+    else Cache Miss (Embeddings Not Found)
+        Agent --> SI : Signal: No cache, processing documents...
+        SI --> User : Display Status: "Analyzing document(s)..."
+
+        Agent -> RAG : Start RAG for Document URL(s)
+        activate RAG
+        note left of RAG : RAG Steps:\n1. Fetch\n2. Chunk\n3. Embed\n4. Index
+        RAG -> RAG : Perform Fetch, Chunk, Embed
+        RAG -> VDB : Index new document embeddings
+        activate VDB
+        VDB --> RAG : Indexing Confirmation
+        deactivate VDB
+        RAG --> Agent : RAG Processing Complete
+        deactivate RAG
+
+        Agent -> VDB : Retrieve relevant context for query (from new docs)
+        activate VDB
+        VDB --> Agent : Return relevant document chunks (context)
+        deactivate VDB
+        ' Context retrieved after RAG, proceed to LLM for synthesis '
+    end
+
+    ' Common step after retrieving context (either from cache or post-RAG) '
+    Agent -> LLM : Generate Response (original_query, retrieved_context)
+    activate LLM
+    LLM --> Agent : Synthesized Answer based on RAG Context
+    deactivate LLM
+    Agent --> SI : Final Answer
+    deactivate Agent
+    SI --> User : Display Answer (incorporating document context)
+    deactivate SI
+
+else Plan: Direct Answer (Simple conversational query)
+    Agent -> LLM : Generate Direct Response (original_query)
+    activate LLM
+    LLM --> Agent : Direct Answer
+    deactivate LLM
+    Agent --> SI : Final Answer
+    deactivate Agent
+    SI --> User : Display Direct Answer
+    deactivate SI
+end
+
+@enduml

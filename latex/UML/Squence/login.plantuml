@@ -1,0 +1,49 @@
+@startuml
+title User Login Sequence Diagram (Email/Password)
+
+actor User
+participant Browser as Client
+participant "Application Server" as Server
+database Database as DB
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam maxmessagesize 120
+skinparam sequenceParticipant bold
+
+User -> Client : Enters Email and Password
+activate Client
+
+Client -> Server : POST /login (email, password)
+activate Server
+note right of Server: Receives login request with credentials.
+
+Server -> DB : Query user by email
+activate DB
+note right of DB: Searches for user record in the database using the email address.
+
+DB --> Server : Return User Record (incl. hashed password)
+deactivate DB
+note left of Server: Receives user data if found.
+
+alt User Found and Password Valid
+    Server -> Server : Verify Password (hash submitted password, compare with stored hash)
+    note left of Server: Performs password hashing and comparison.
+    ' Assume password matches '
+    Server -> Server : Generate Session Token/ID
+    note left of Server: Creates a secure session for the user.
+    Server --> Client : HTTP 200 OK (Login Success, set Session Cookie/Token)
+    deactivate Server
+    note right of Client: Stores session token/cookie.
+    Client -> User : Display Welcome Page / Dashboard
+    deactivate Client
+
+else User Not Found or Password Invalid
+    Server --> Client : HTTP 401 Unauthorized (Login Failed)
+    deactivate Server
+    note right of Client: Receives authentication failure.
+    Client -> User : Display Error Message ("Invalid credentials")
+    deactivate Client
+end
+
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+title Activity Diagram: Model Switching
+
+start
+:User accesses model switching interface;
+:System displays list of available built-in models and info;
+:User selects a model (e.g., GPT-4o, Qwen);
+:System applies selected model;
+:System automatically adjusts relevant parameters for optimal performance;
+:System confirms successful model switch to user;
+stop
+
+@enduml

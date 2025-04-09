@@ -1,0 +1,78 @@
+@startuml
+title Package Diagram: CodeWay - RAG-based Intelligent Programming Assistance System
+
+skinparam packageStyle rect
+
+package "Frontend" as FE {
+  folder "UI Components" {
+    [React Components (Shadcn/UI)]
+    [State Management]
+  }
+  folder "API Client" {
+    [REST/WebSocket Client]
+  }
+}
+
+package "Backend Services" as BE {
+  folder "API Endpoints (FastAPI)" {
+    [User Management API]
+    [Project Management API]
+    [Code Execution API]
+    [AI Task API]
+  }
+  folder "Business Logic" {
+    [User Services]
+    [Project Services]
+    [Code Handling Logic]
+  }
+  folder "Data Access" {
+    [User Repository]
+    [Project Repository]
+    [Snippet Repository]
+  }
+}
+
+package "AI Services" as AISvc {
+  folder "RAG Engine" {
+    [Document Retrieval]
+    [Context Augmentation]
+    [Vector DB Interface]
+  }
+  folder "LLM Interface" {
+    [Code Generation Service]
+    [Code Optimization Service]
+    [Debugging Assistance Service]
+    [Model Switching Logic]
+  }
+  folder "Document Processing" {
+    [Content Extraction]
+    [Text Chunking]
+    [Vectorization]
+  }
+}
+
+package "Data Persistence" as DB {
+  folder "Relational DB" {
+    [PostgreSQL (via Supabase)]
+  }
+  folder "Vector DB" {
+    [Vector Embeddings Storage]
+  }
+}
+
+package "Infrastructure / Utilities" as Infra {
+  [Sandbox Environment (for Code Trial Run)]
+  [Logging]
+  [Configuration Management]
+}
+
+' Dependencies
+FE --> BE : API Calls (REST, WebSocket)
+BE --> AISvc : Request AI Tasks (Generation, RAG, etc.)
+BE --> DB : Store/Retrieve User, Project Data (PostgreSQL)
+BE --> Infra : Use Utilities (Logging, Config), Request Code Execution (Sandbox)
+
+AISvc --> DB : Access/Store Embeddings (VectorDB), Store/Retrieve Docs (PostgreSQL?)
+AISvc --> Infra : Maybe use Doc Processing Utilities
+
+@enduml

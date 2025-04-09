@@ -1,0 +1,109 @@
+@startuml DataModel
+
+!theme plain
+skinparam linetype ortho
+skinparam dpi 300
+skinparam defaultFontName Microsoft YaHei
+
+' 实体定义
+entity "User" as User {
+  * id : UUID <<PK>>
+  --
+  * email : String <<unique>>
+  * password_hash : String
+  * username : String <<unique>>
+  created_at : DateTime
+  last_login : DateTime
+  avatar_url : String
+  user_type : Enum
+}
+
+entity "Profile" as Profile {
+  * id : UUID <<PK, FK>>
+  --
+  * username : String
+  * email : String
+  avatar_url : String
+  bio : Text
+  created_at : DateTime
+  updated_at : DateTime
+}
+
+entity "Project" as Project {
+  * id : UUID <<PK>>
+  --
+  * name : String
+  * owner_id : UUID <<FK>>
+  description : Text
+  * created_at : DateTime
+  updated_at : DateTime
+  is_public : Boolean
+  stars : Integer
+}
+
+entity "CodeSnippet" as CodeSnippet {
+  * id : UUID <<PK>>
+  --
+  * project_id : UUID <<FK>>
+  * content : Text
+  * language : String
+  * created_at : DateTime
+  updated_at : DateTime
+  description : Text
+  is_ai_generated : Boolean
+}
+
+entity "Document(文档)" as Document {
+  * id : UUID <<PK>>
+  --
+  * title : String
+  * content : Text
+  * source_url : String
+  * project_id : UUID <<FK>>
+  * created_at : DateTime
+  updated_at : DateTime
+  document_type : String
+}
+
+entity "DocumentIndex" as DocumentIndex {
+  * id : UUID <<PK>>
+  --
+  * document_id : UUID <<FK>>
+  * vector_embedding : Vector
+  * metadata : JSON
+  * created_at : DateTime
+  updated_at : DateTime
+  embedding_model : String
+}
+
+entity "UserPreference" as UserPreference {
+  * id : UUID <<PK>>
+  --
+  * user_id : UUID <<FK>>
+  * preferred_language : String
+  theme : String
+  editor_settings : JSON
+  ai_model_settings : JSON
+}
+
+entity "APIIntegration" as APIIntegration {
+  * id : UUID <<PK>>
+  --
+  * user_id : UUID <<FK>>
+  * api_type : String
+  auth_token : String <<encrypted>>
+  config : JSON
+  * created_at : DateTime
+  updated_at : DateTime
+}
+
+' 关系定义
+User ||--|| Profile : "has a >"
+User ||--o{ Project : "has >"
+User ||--o{ UserPreference : "has >"
+User ||--o{ APIIntegration : "configures >"
+Project ||--o{ CodeSnippet : "contains >"
+Project ||--o{ Document : "relates to >"
+Document ||--|| DocumentIndex : "indexed by >"
+
+@enduml

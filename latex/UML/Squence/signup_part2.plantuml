@@ -1,0 +1,39 @@
+@startuml
+title User Sign Up Sequence: Email Verification
+
+actor User
+participant Browser as Client
+participant "Application Server" as Server
+database Database as DB
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam maxmessagesize 150
+skinparam sequenceParticipant bold
+
+== Email Verification ==
+User -> Client : Enters Verification Code received via Email
+activate Client
+Client -> Server : POST /verify-code (email, verificationCode)
+activate Server
+note right of Server: Receives verification code submission.
+
+Server -> DB : Retrieve temporary data & code for email
+activate DB
+DB --> Server : Return temporary data (or not found/expired)
+deactivate DB
+
+alt Code Valid and Not Expired
+    Server -> Server : Mark email as potentially verified (awaiting username)
+    Server --> Client : HTTP 200 OK (Code Verified, prompt for username)
+    deactivate Server
+    Client -> User : Prompt for Username
+    deactivate Client
+else Code Invalid or Expired
+    Server --> Client : HTTP 400 Bad Request (Invalid or expired code)
+    deactivate Server
+    Client -> User : Display Error: "Invalid or expired verification code"
+    deactivate Client
+end
+
+@enduml

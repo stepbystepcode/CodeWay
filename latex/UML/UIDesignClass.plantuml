@@ -1,0 +1,198 @@
+@startuml UIDesignClass
+
+!theme plain
+skinparam linetype ortho
+skinparam dpi 300
+skinparam defaultFontName Microsoft YaHei
+
+' 核心UI组件
+package "Core UI Components" {
+  abstract class "UIComponent" {
+    +render(): ReactNode
+    #useState()
+    #useEffect()
+  }
+  
+  class "Button" {
+    +variant: string
+    +size: string
+    +disabled: boolean
+    +onClick(): void
+  }
+  
+  class "Input" {
+    +type: string
+    +value: string
+    +placeholder: string
+    +onChange(event): void
+    +error: string
+  }
+  
+  class "Card" {
+    +className: string
+    +children: ReactNode
+  }
+  
+  class "Dialog" {
+    +isOpen: boolean
+    +onClose(): void
+    +title: string
+  }
+  
+  class "Tabs" {
+    +value: string
+    +onChange(value): void
+    +items: TabItem[]
+  }
+  
+  class "Avatar" {
+    +src: string
+    +alt: string
+    +fallback: string
+  }
+  
+  class "Sidebar" {
+    +isOpen: boolean
+    +onToggle(): void
+    +items: MenuItem[]
+  }
+}
+
+' 页面组件
+package "Page Components" {
+  class "LoginPage" {
+    -email: string
+    -password: string
+    -errors: Object
+    +validateForm(): boolean
+    +handleSubmit(): void
+  }
+  
+  class "RegisterPage" {
+    -email: string
+    -password: string
+    -confirmPassword: string
+    -verificationCode: string
+    -username: string
+    -currentStep: number
+    +validateStep1(): boolean
+    +validateStep2(): boolean
+    +handleNextStep(): void
+    +handleResendCode(): void
+  }
+  
+  class "EditorPage" {
+    -currentFile: File
+    -fileContent: string
+    -isAIPanelOpen: boolean
+    +saveFile(): void
+    +updateContent(content): void
+    +toggleAIPanel(): void
+  }
+  
+  class "ProjectPage" {
+    -projects: Project[]
+    -selectedProject: Project
+    +createProject(): void
+    +openProject(id): void
+    +deleteProject(id): void
+  }
+}
+
+' 功能组件
+package "Feature Components" {
+  class "CodeEditor" {
+    +language: string
+    +value: string
+    +onChange(value): void
+    +highlightLine(line): void
+  }
+  
+  class "FileExplorer" {
+    +files: File[]
+    +onFileSelect(file): void
+    +onFolderExpand(folder): void
+  }
+  
+  class "AIAssistant" {
+    -prompt: string
+    -response: string
+    -isLoading: boolean
+    +submitPrompt(): void
+    +applyCode(): void
+    +provideFeedback(rating): void
+  }
+  
+  class "NavigationMenu" {
+    +items: MenuItem[]
+    +activeItem: string
+    +onSelect(item): void
+  }
+}
+
+' 管理和服务
+package "Services" {
+  class "AuthService" {
+    +login(credentials): Promise
+    +register(userData): Promise
+    +verify(verificationData): Promise
+    +logout(): void
+    +getCurrentUser(): User
+  }
+  
+  class "ProjectService" {
+    +getProjects(): Promise
+    +createProject(project): Promise
+    +updateProject(id, data): Promise
+    +deleteProject(id): Promise
+  }
+  
+  class "FileService" {
+    +getFiles(projectId): Promise
+    +saveFile(file, content): Promise
+    +createFile(projectId, path): Promise
+    +deleteFile(id): Promise
+  }
+  
+  class "AIService" {
+    +generateCode(prompt): Promise
+    +analyzeCode(code): Promise
+    +explainCode(code): Promise
+  }
+}
+
+' 关系
+UIComponent <|-- Button
+UIComponent <|-- Input
+UIComponent <|-- Card
+UIComponent <|-- Dialog
+UIComponent <|-- Tabs
+UIComponent <|-- Avatar
+UIComponent <|-- Sidebar
+
+LoginPage --> Button
+LoginPage --> Input
+LoginPage --> Card
+LoginPage --> AuthService
+
+RegisterPage --> Button
+RegisterPage --> Input
+RegisterPage --> Card
+RegisterPage --> AuthService
+
+EditorPage --> CodeEditor
+EditorPage --> FileExplorer
+EditorPage --> AIAssistant
+EditorPage --> FileService
+EditorPage --> AIService
+
+ProjectPage --> Card
+ProjectPage --> Button
+ProjectPage --> ProjectService
+
+CodeEditor ..> FileService
+AIAssistant ..> AIService
+FileExplorer ..> FileService
+NavigationMenu ..> ProjectService
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+title User Sign Up Sequence: Profile Completion
+
+actor User
+participant Browser as Client
+participant "Application Server" as Server
+database Database as DB
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam maxmessagesize 150
+skinparam sequenceParticipant bold
+
+== Profile Setup & Completion ==
+User -> Client : Enters Desired Username
+activate Client
+Client -> Server : POST /complete-profile (email, username) ' email or session identifier '
+activate Server
+note right of Server: Receives username for final setup.
+
+Server -> DB : Check if username is available
+activate DB
+DB --> Server : Username available / taken
+deactivate DB
+
+alt Username Available
+    Server -> DB : Create Permanent User Account (update temp record: add username, mark verified)
+    activate DB
+    note right of DB: Finalizes user creation / updates record.
+    DB --> Server : User Account Created/Updated Confirmation
+    deactivate DB
+    Server --> Client : HTTP 201 Created (Sign Up Successful)
+    deactivate Server
+    Client -> User : Display Message: "Sign up successful! You can now log in."
+    deactivate Client
+else Username Taken
+    Server --> Client : HTTP 409 Conflict (Username already taken)
+    deactivate Server
+    Client -> User : Display Error: "Username is already taken"
+    deactivate Client
+end
+
+@enduml

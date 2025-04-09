@@ -1,0 +1,87 @@
+@startuml
+title Component Diagram: CodeWay System
+
+skinparam componentStyle rectangle
+
+package "Client Application" {
+  component "CodeWay UI\n(React/TS/Tauri?)" as UI
+  note right of UI
+    Runs in User's Browser
+    or as a Desktop Application.
+  end note
+}
+
+package "Backend Infrastructure" {
+    component "Backend API Server\n(FastAPI + Python)" as BackendAPI
+    note bottom of BackendAPI
+     Handles business logic, user requests,
+     orchestrates AI tasks and data access.
+    end note
+
+    component "AI Service Layer" as AIServices
+    note bottom of AIServices
+     Manages RAG, LLM interactions,
+     code generation/optimization logic.
+     Uses LangChain.
+    end note
+
+    component "SGLang Server" as SGLangServer
+    note bottom of SGLangServer
+     Provides optimized interface
+     for local/deployed LLMs.
+    end note
+
+    component "Sandbox Executor" as Sandbox
+    note bottom of Sandbox
+     Securely executes user-submitted
+     code for trial runs.
+    end note
+
+    component "Document Processor" as DocProcessor #LightCyan
+    note bottom of DocProcessor
+      Handles fetching, parsing, chunking,
+      and vectorization for RAG.
+    end note
+}
+
+package "Data Stores" {
+  database "PostgreSQL Database\n(via Supabase?)" as PgDB
+  note bottom of PgDB
+   Stores user data, project info,
+   document metadata, etc.
+  end note
+
+  database "Vector Database" as VDB
+  note bottom of VDB
+   Stores vector embeddings
+   for RAG retrieval.
+  end note
+}
+
+ package "External Dependencies" {
+    component "External LLM APIs\n(GPT-4o, Qwen, Hugging Face)" as ExtLLM
+    note bottom of ExtLLM
+      Represents connections to
+      third-party AI model APIs.
+    end note
+ }
+
+
+' Define Dependencies (Arrows indicate dependency direction) '
+
+UI --> BackendAPI : (RESTful API / WebSocket)
+
+BackendAPI --> AIServices : Request AI Processing
+BackendAPI --> PgDB : User/Project Data CRUD
+BackendAPI --> Sandbox : Request Code Execution
+BackendAPI --> DocProcessor : Request Document Indexing
+
+AIServices --> SGLangServer : Local LLM Inference
+AIServices --> VDB : Vector Search/Retrieval (RAG)
+AIServices --> ExtLLM : Remote LLM API Calls
+AIServices --> DocProcessor : Use Processed Data
+
+DocProcessor --> VDB : Store Embeddings
+
+
+@enduml

@@ -1,0 +1,111 @@
+@startuml ProjectManagementClass
+
+!theme plain
+skinparam linetype ortho
+skinparam dpi 300
+skinparam defaultFontName Microsoft YaHei
+
+package "Project Management" {
+  class "ProjectManagerUI" {
+    -projects: Project[]
+    -selectedProject: Project
+    -isCreateModalOpen: boolean
+    -isDeleteModalOpen: boolean
+    +loadProjects(): void
+    +createProject(data: Object): void
+    +openProject(id: string): void
+    +deleteProject(id: string): void
+    +updateProject(id: string, data: Object): void
+    +toggleCreateModal(): void
+    +toggleDeleteModal(): void
+  }
+
+  class "ProjectService" {
+    +getAllProjects(userId: string): Promise<Project[]>
+    +getProjectById(id: string): Promise<Project>
+    +createProject(project: Project): Promise<Project>
+    +updateProject(id: string, data: Object): Promise<Project>
+    +deleteProject(id: string): Promise<boolean>
+    -handleAPIError(error: Error): void
+  }
+
+  class "Project" {
+    +id: string
+    +name: string
+    +description: string
+    +createdAt: Date
+    +updatedAt: Date
+    +ownerId: string
+    +isPublic: boolean
+    +files: File[]
+    +collaborators: User[]
+    +getFiles(): File[]
+    +getRootDirectory(): Directory
+    +addFile(file: File): void
+    +removeFile(id: string): boolean
+  }
+
+  class "File" {
+    +id: string
+    +name: string
+    +path: string
+    +content: string
+    +type: string
+    +size: number
+    +lastModified: Date
+    +projectId: string
+    +parentId: string
+    +isDirectory: boolean
+    +getContent(): Promise<string>
+    +setContent(content: string): Promise<void>
+    +getPath(): string
+  }
+
+  class "Directory" extends File {
+    +children: File[]
+    +addChild(file: File): void
+    +removeChild(id: string): boolean
+    +getChildByName(name: string): File
+    +getChildren(): File[]
+  }
+
+  class "FileService" {
+    +getFileContent(fileId: string): Promise<string>
+    +saveFileContent(fileId: string, content: string): Promise<void>
+    +createFile(projectId: string, file: File): Promise<File>
+    +deleteFile(fileId: string): Promise<boolean>
+    +moveFile(fileId: string, newParentId: string): Promise<File>
+    +renameFile(fileId: string, newName: string): Promise<File>
+  }
+
+  class "User" {
+    +id: string
+    +username: string
+    +email: string
+    +avatarUrl: string
+    +projects: Project[]
+    +getOwnedProjects(): Project[]
+    +getCollaborations(): Project[]
+  }
+
+  class "ProjectRepository" {
+    +findById(id: string): Promise<Project>
+    +findByUserId(userId: string): Promise<Project[]>
+    +create(project: Project): Promise<Project>
+    +update(id: string, data: Object): Promise<Project>
+    +delete(id: string): Promise<boolean>
+    +addCollaborator(projectId: string, userId: string): Promise<void>
+  }
+}
+
+' 关系
+ProjectManagerUI ..> ProjectService : uses
+ProjectService ..> ProjectRepository : uses
+ProjectService ..> Project : manages
+Project *-- File : contains
+Project o-- User : owned by
+FileService ..> File : manages
+ProjectRepository ..> Project : persists
+User o-- Project : collaborates on
+
+@enduml

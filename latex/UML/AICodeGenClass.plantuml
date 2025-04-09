@@ -1,0 +1,104 @@
+@startuml AICodeGenClass
+
+!theme plain
+skinparam linetype ortho
+skinparam dpi 300
+skinparam defaultFontName Microsoft YaHei
+
+package "AI Code Generation" {
+  class "CodeGenerationUI" {
+    -prompt: string
+    -result: string
+    -isLoading: boolean
+    -language: string
+    +setPrompt(text: string)
+    +submitPrompt(): void
+    +applyGeneratedCode(): void
+    +setLanguage(lang: string): void
+    +provideFeedback(rating: number): void
+  }
+
+  class "CodeGenerationService" {
+    +generateCode(prompt: string, language: string): Promise<string>
+    +explainCode(code: string): Promise<string>
+    +improveCode(code: string, instruction: string): Promise<string>
+    +translateCode(code: string, targetLang: string): Promise<string>
+    -preparePrompt(text: string, context: any): string
+    -handleAPIResponse(response: any): string
+  }
+
+  class "AIModelInterface" {
+    -apiKey: string
+    -baseURL: string
+    -model: string
+    +callModel(prompt: string, params: Object): Promise<Response>
+    +streamResponse(prompt: string, callbacks: Object): Promise<void>
+    -handleError(error: Error): void
+  }
+
+  class "RAGEngine" {
+    -vectorStore: VectorStore
+    -embeddingModel: string
+    +retrieveRelevantDocuments(query: string): Promise<Document[]>
+    +enhancePromptWithContext(prompt: string, docs: Document[]): string
+    +indexDocument(document: Document): Promise<void>
+    -calculateRelevance(query: string, doc: Document): number
+  }
+
+  class "CodeRepository" {
+    -snippets: Map<string, CodeSnippet[]>
+    +getSnippetsByLanguage(lang: string): CodeSnippet[]
+    +getSnippetsByTag(tag: string): CodeSnippet[]
+    +addSnippet(snippet: CodeSnippet): void
+    +removeSnippet(id: string): boolean
+    +searchSnippets(query: string): CodeSnippet[]
+  }
+
+  class "UserPreference" {
+    +aiModelPreference: string
+    +codeStyle: string
+    +preferredLanguages: string[]
+    +commentLevel: string
+    +responseFormat: string
+    +getPreferences(): Object
+    +updatePreference(key: string, value: any): void
+  }
+}
+
+class "LLMResponse" {
+  +content: string
+  +metadata: Object
+  +usage: Object
+  +getFormattedCode(): string
+  +getExplanation(): string
+}
+
+class "CodeSnippet" {
+  +id: string
+  +code: string
+  +language: string
+  +description: string
+  +tags: string[]
+  +createdAt: Date
+  +isAIGenerated: boolean
+}
+
+class "Document" {
+  +id: string
+  +content: string
+  +metadata: Object
+  +embedding: number[]
+}
+
+' 关系
+CodeGenerationUI ..> CodeGenerationService : uses
+CodeGenerationService ..> AIModelInterface : uses
+CodeGenerationService ..> RAGEngine : uses
+CodeGenerationService ..> UserPreference : uses
+CodeGenerationService ..> CodeRepository : uses
+AIModelInterface ..> LLMResponse : produces
+RAGEngine ..> Document : retrieves
+CodeRepository *-- CodeSnippet : contains
+CodeGenerationService -- LLMResponse : processes
+
+@enduml

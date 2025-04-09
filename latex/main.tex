@@ -1001,16 +1001,6 @@ b. 服务器上应该配备的软件：
         \label{fig:CodeOptimizationSuggestions}
     \end{figure}
     
-    \item 性能瓶颈分析
-    
-    针对用户提交的代码，系统通过静态分析与模拟运行相结合的方式，识别代码中可能存在的性能瓶颈，如算法效率低下、内存泄漏、资源竞争等问题。系统会生成详细的性能分析报告，标注出影响性能的关键代码位置，并提供相应的优化方案。对于复杂系统，还能够进行全局性能评估，协助用户制定系统性能提升策略。
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.7\textwidth]{UML/Activity/Performance-Bottleneck-Analysis.png}
-        \caption{性能瓶颈分析流程}
-        \label{fig:PerformanceBottleneckAnalysis}
-    \end{figure}
-    
     \item 代码试运行
     
     用户可在系统内输入代码片段，选择目标编程语言及运行环境，点击试运行按钮后，系统会创建一个安全的沙箱环境，迅速执行代码，并将运行结果、控制台输出以及可能出现的错误信息实时反馈给用户。系统支持设置运行参数，如输入值、环境变量等，使用户能够在不同条件下测试代码行为，验证代码逻辑是否符合预期。
@@ -1029,16 +1019,6 @@ b. 服务器上应该配备的软件：
         \includegraphics[width=0.7\textwidth]{UML/Activity/Error-Detection-and-Correction.png}
         \caption{错误检测纠正流程}
         \label{fig:ErrorDetectionCorrection}
-    \end{figure}
-    
-    \item 调试辅助支持
-    
-    系统提供强大的调试辅助功能，帮助用户快速定位和解决代码问题。用户可以设置断点、查看变量状态、执行单步调试等操作，系统会实时显示程序执行流程和数据变化。结合RAG技术，系统能够识别调试过程中的异常状态，并推荐可能的调试策略，如查看特定变量、检查特定函数调用等。系统还支持条件断点和日志点设置，方便用户针对复杂场景进行精细调试。
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.7\textwidth]{UML/Activity/Debugging-Assistance-Support.png}
-        \caption{调试辅助支持功能示意图}
-        \label{fig:DebuggingAssistance}
     \end{figure}
     
     \item 模型切换
@@ -1183,18 +1163,18 @@ b. 服务器上应该配备的软件：
 \subsection{软件需求的分析类模型}
 
 在分析了用例模型与用例交互模型后，我们构建了初步的分析类模型，明确了类之间的关系和属性，并绘制了相应的类图，如图18 所示。
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.8\textwidth]{figures/analysis-class-model.pdf}
-%     \caption{软件需求的分析类模型}
-%     \label{fig:analysis-class-model}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{UML/ClassDiagram.png}
+    \caption{软件需求的分析类模型}
+    \label{fig:analysis-class-model}
+\end{figure}
 
 \section{其它软件需求描述}
 \subsection{性能要求}
 \begin{enumerate}[label=(\arabic*)]
     \item 所有界面操作的响应时间应小于1 秒
-    \item 内存占用率应小于等于 50%
+    \item 内存占用率应小于等于 50\%
     \item 数据的转换和传送时间应小于 2 秒
     \item 系统应能支持至少100 个并发用户同时操作，而不影响性能或稳定性
     \item 系统应每周七天，每天24 小时可用；在没有故障的情况下系统正常运行时间比例在95\%以上

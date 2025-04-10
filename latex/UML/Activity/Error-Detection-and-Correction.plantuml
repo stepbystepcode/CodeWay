@@ -12,21 +12,21 @@ partition RAG & Case Matching {
 :System provides detailed error explanation;
 :System provides correction suggestions;
 if () then
-  ->[可自动修复] :System generates fixed code;
+  ->[Auto Fix] :System generates fixed code;
   :Display suggested fix and code to user;
   
   |User|
   if () then
-    ->[确认应用] 
+    ->[Confirm Fix] 
     |System|
     :Apply automated fix;
   else
-    ->[拒绝应用] 
+    ->[Reject Fix] 
     |User|
     :User reviews suggestions, handles manually;
   endif
 else
-  ->[不可自动修复] 
+  ->[Manual Fix] 
   |System|
   :Display error explanation and suggestions to user;
   

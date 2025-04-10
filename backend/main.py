@@ -61,15 +61,6 @@ class AuthResponse(BaseModel):
     token: str
     user_id: str
 
-
-
-
-
-@app.get("/")
-async def read_root():
-    return {"Hello": "World"}
-
-
 @app.get("/api/health")
 def health_check():
     """Simple health check endpoint"""

@@ -1,35 +1,50 @@
+import asyncio
+from pathlib import Path
+from textwrap import dedent
+
 from agno.agent import Agent
-from agno.embedder.openai import OpenAIEmbedder
-from agno.knowledge.pdf_url import PDFUrlKnowledgeBase
-from agno.knowledge.website import WebsiteKnowledgeBase
-from agno.models.openai import OpenAIChat
-from agno.vectordb.pgvector import PgVector, SearchType
+from agno.models.openai.like import OpenAILike
+# from agno.models.openai import OpenAIChat
+from agno.tools.mcp import MCPTools
+from mcp import StdioServerParameters
 import os
+import dotenv
 
-db_url = "postgresql+psycopg://ai:ai@localhost:5532/ai"
-# Create a knowledge base of PDFs from URLs
-knowledge_base = PDFUrlKnowledgeBase(
-    urls=["https://agno-public.s3.amazonaws.com/recipes/ThaiRecipes.pdf"],
-    # Use PgVector as the vector database and store embeddings in the `ai.recipes` table
-    vector_db=PgVector(
-        table_name="recipes",
-        db_url=db_url,
-        search_type=SearchType.hybrid,
-        embedder=OpenAIEmbedder(id="text-embedding-3-small"),
-    ),
-)
-# Load the knowledge base: Comment after first run as the knowledge base is already loaded
-# knowledge_base.load(upsert=True)
+dotenv.load_dotenv()
 
-agent = Agent(
-    model=OpenAIChat(id="gpt-4o", base_url=os.environ.get("OPENAI_API_BASE")),
-    knowledge=knowledge_base,
-    # Enable RAG by adding context from the `knowledge` to the user prompt.
-    add_references=True,
-    # Set as False because Agents default to `search_knowledge=True`
-    search_knowledge=False,
-    markdown=True,
-)
-agent.print_response(
-    "How do I make chicken and galangal in coconut milk soup", stream=True
-)
+async def run_agent(message: str) -> None:
+    """Run the filesystem agent with the given message."""
+
+    file_path = "/Users/stepbystep/Documents/CodeWay"
+    print("file_path:", file_path)
+
+    # MCP server to access the filesystem (via `npx`)
+    async with MCPTools(f"npx -y @modelcontextprotocol/server-filesystem {file_path}") as mcp_tools:
+        agent = Agent(
+            # model=OpenAIChat(id="gpt-4o", base_url=os.environ.get("OPENAI_BASE_URL"), api_key=os.environ.get("OPENAI_API_KEY")),
+            model=OpenAILike(id="Qwen/Qwen2.5-32B-Instruct", base_url=os.environ.get("LOCAL_API_BASE")),
+            tools=[mcp_tools],
+            instructions=dedent("""\
+                You are a filesystem assistant. Help users explore files and directories.
+
+                - Navigate the filesystem to answer questions
+                - Use the list_allowed_directories tool to find directories that you can access
+                - Provide clear context about files you examine
+                - Use headings to organize your responses
+                - Be concise and focus on relevant information\
+            """),
+            markdown=True,
+            show_tool_calls=True,
+            debug_mode=True
+        )
+
+        # Run the agent
+        await agent.aprint_response(message, stream=True)
+
+
+# Example usage
+if __name__ == "__main__":
+    # Basic example - exploring project license
+    print("OPENAI_BASE_URL:", os.environ.get("OPENAI_BASE_URL"))
+    print("LOCAL_API_BASE:", os.environ.get("LOCAL_API_BASE"))
+    asyncio.run(run_agent("What is the license for this project?"))

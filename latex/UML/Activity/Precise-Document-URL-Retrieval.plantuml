@@ -3,36 +3,29 @@ title Activity Diagram: Precise Document URL Retrieval
 
 |User|
 start
-:User sets Document URL;
-:User enables document retrieval feature;
+:Input Document URL;
+:Enable Document Retrieval Feature;
 
 |System|
-:System checks if URL format is valid;
+:Validate URL Format;
 if () then
-  ->[URL有效] :System checks if document exists in Vector DB;
+  -> [Yes] :Check if Document Exists in Vector DB;
   if () then
-    ->[文档存在] :Enable QA feature;
-    :System provides detailed answers based on document content;
-    
-    |User|
-    stop
+    -> [Yes] :Enable QA Feature;
+    :Provide Answers Based on Document;
   else
-    ->[文档不存在] :Prompt user: "Document not found, please add it";
-    partition Document Addition Process {
-      :Extract document content;
-      :Vectorize content;
-      :Store vectors in Vector DB;
+    -> [No] :Notify "Document not found, please add it";
+    partition "Document Addition Process" {
+      :Extract Document Content;
+      :Vectorize Content;
+      :Store Vectors in Vector DB;
     }
-    :Prompt user: "Document added successfully, QA ready";
-    
-    |User|
-    stop
+    :Notify "Document added successfully, QA ready";
   endif
 else
-  ->[URL无效] :Prompt user: "Invalid URL format";
-  
-  |User|
-  stop
+  -> [No] :Notify "Invalid URL format";
 endif
 
+|User|
+stop
 @enduml

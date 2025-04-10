@@ -9,11 +9,11 @@ start
 
 |System|
 :System validates user input and configuration;
-if (Is configuration valid?) then (Yes)
-  :System handles API call, model loading, resource allocation;
+if () then
+  ->[valid] :System handles API call, model loading, resource allocation;
   :System confirms successful custom model setup;
-else (No)
-  :Display configuration error message;
+else
+  ->[invalid] :Display configuration error message;
   :Request user to correct configuration;
   
   |User|

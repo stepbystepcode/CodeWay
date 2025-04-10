@@ -1,104 +1,73 @@
 @startuml AICodeGenClass
 
+' 设置图片尺寸和主题
 !theme plain
-skinparam linetype ortho
-skinparam dpi 300
+skinparam dpi 200
 skinparam defaultFontName Microsoft YaHei
+skinparam classAttributeIconSize 0
 
-package "AI Code Generation" {
-  class "CodeGenerationUI" {
-    -prompt: string
-    -result: string
-    -isLoading: boolean
-    -language: string
-    +setPrompt(text: string)
-    +submitPrompt(): void
-    +applyGeneratedCode(): void
-    +setLanguage(lang: string): void
-    +provideFeedback(rating: number): void
+' 设置垂直方向布局
+top to bottom direction
+
+' 设置页面宽度，防止截断
+scale max 800 width
+
+' 隐藏圆圈和空方法/字段
+hide circle
+hide empty members
+
+' 使用简短的类名
+package "UI Components" {
+  class "CodeGenerationUI" as CGUi
+}
+
+package "Core Services" {
+  class "CodeGenerationService" as CGSvc {
+    +generateCode()
+    +explainCode()
+    +improveCode()
   }
-
-  class "CodeGenerationService" {
-    +generateCode(prompt: string, language: string): Promise<string>
-    +explainCode(code: string): Promise<string>
-    +improveCode(code: string, instruction: string): Promise<string>
-    +translateCode(code: string, targetLang: string): Promise<string>
-    -preparePrompt(text: string, context: any): string
-    -handleAPIResponse(response: any): string
+  
+  class "AIModelInterface" as AIAPI {
+    +callModel()
+    +streamResponse()
   }
-
-  class "AIModelInterface" {
-    -apiKey: string
-    -baseURL: string
-    -model: string
-    +callModel(prompt: string, params: Object): Promise<Response>
-    +streamResponse(prompt: string, callbacks: Object): Promise<void>
-    -handleError(error: Error): void
-  }
-
-  class "RAGEngine" {
-    -vectorStore: VectorStore
-    -embeddingModel: string
-    +retrieveRelevantDocuments(query: string): Promise<Document[]>
-    +enhancePromptWithContext(prompt: string, docs: Document[]): string
-    +indexDocument(document: Document): Promise<void>
-    -calculateRelevance(query: string, doc: Document): number
-  }
-
-  class "CodeRepository" {
-    -snippets: Map<string, CodeSnippet[]>
-    +getSnippetsByLanguage(lang: string): CodeSnippet[]
-    +getSnippetsByTag(tag: string): CodeSnippet[]
-    +addSnippet(snippet: CodeSnippet): void
-    +removeSnippet(id: string): boolean
-    +searchSnippets(query: string): CodeSnippet[]
-  }
-
-  class "UserPreference" {
-    +aiModelPreference: string
-    +codeStyle: string
-    +preferredLanguages: string[]
-    +commentLevel: string
-    +responseFormat: string
-    +getPreferences(): Object
-    +updatePreference(key: string, value: any): void
+  
+  class "RAGEngine" as RAG {
+    +retrieveDocuments()
+    +enhancePrompt()
   }
 }
 
-class "LLMResponse" {
-  +content: string
-  +metadata: Object
-  +usage: Object
-  +getFormattedCode(): string
-  +getExplanation(): string
+package "Data" {
+  class "CodeRepository" as CodeRepo
+  class "UserPreference" as UserPref
 }
 
-class "CodeSnippet" {
-  +id: string
-  +code: string
-  +language: string
-  +description: string
-  +tags: string[]
-  +createdAt: Date
-  +isAIGenerated: boolean
+' 辅助类
+package "Supporting Classes" {
+  class "CodeSnippet" as Snippet
+  class "Document" as Doc
+  class "LLMResponse" as LLMResp
 }
 
-class "Document" {
-  +id: string
-  +content: string
-  +metadata: Object
-  +embedding: number[]
-}
+' 核心关系
+CGUi --> CGSvc
+CGSvc --> AIAPI
+CGSvc --> RAG
+CGSvc --> CodeRepo
+CGSvc --> UserPref
 
-' 关系
-CodeGenerationUI ..> CodeGenerationService : uses
-CodeGenerationService ..> AIModelInterface : uses
-CodeGenerationService ..> RAGEngine : uses
-CodeGenerationService ..> UserPreference : uses
-CodeGenerationService ..> CodeRepository : uses
-AIModelInterface ..> LLMResponse : produces
-RAGEngine ..> Document : retrieves
-CodeRepository *-- CodeSnippet : contains
-CodeGenerationService -- LLMResponse : processes
+' 数据流关系
+RAG ..> Doc
+CodeRepo ..> Snippet
+AIAPI ..> LLMResp
+
+' 添加说明
+note right of CGUi : User interface for code generation
+note right of CGSvc : Handles generation logic
+note right of AIAPI : Interface to AI models
+note right of RAG : Retrieval Augmented Generation
+note right of CodeRepo : Stores code snippets
 
 @enduml

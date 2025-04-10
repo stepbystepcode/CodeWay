@@ -6,34 +6,39 @@ start
 :User enters Preference Settings interface;
 
 |System|
-:System displays setting categories (Theme, Editor, Language, Interaction, etc.);
+:System displays setting categories;
 
 |User|
-repeat
-  :User selects a setting category;
-  :User modifies specific preferences (e.g., select Dark Mode, set default language);
+:User selects a setting category;
+:User modifies preferences;
+:User saves settings;
+
+|System|
+:System applies and stores user preferences;
+
+|User|
+if () then
+  ->[more settings] :User selects next setting category;
+  :User modifies preferences;
   :User saves settings;
-  
+
   |System|
   :System applies and stores user preferences;
-  
-  |User|
-repeat while (User continues modifying other settings?) is (Yes) not (No)
-split
- :User chooses "Export Settings";
- 
- |System|
- :System generates configuration file;
- :Provide file for user download;
- 
+else
+  ->[done with settings]
+endif
+
 |User|
-split again
- :User chooses "Import Settings";
- :User uploads configuration file;
- 
- |System|
- :System validates and applies configuration;
-endsplit
+:User may export settings as file;
+
+|System|
+:System generates file if requested;
+
+|User|
+:User may import settings from file;
+
+|System|
+:System applies imported settings if provided;
 
 |User|
 :User exits Settings interface;

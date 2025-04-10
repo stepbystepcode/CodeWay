@@ -8,14 +8,14 @@ start
 
 |System|
 :System checks if code snippet is valid (e.g., not empty);
-if (Is code snippet valid?) then (Yes)
-  :System reads snippet content;
+if () then
+  ->[valid] :System reads snippet content;
   :System analyzes code semantics using embedding vector technology;
   :System identifies code patterns and structure;
   :System generates optimization suggestions;
   :Display optimization suggestions to user;
-else (No)
-  :Prompt user: "Invalid code snippet";
+else
+  ->[invalid] :Prompt user: "Invalid code snippet";
 endif
 
 |User|

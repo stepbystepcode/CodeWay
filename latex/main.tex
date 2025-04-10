@@ -1355,37 +1355,49 @@ f. 可扩展性：设计灵活的架构，便于后续功能扩展和系统升�
 
 g. 效率性：优化系统性能，减少资源消耗，提高响应速度。
 \subsection{软件设计的约束和限制}
-
-（1）操作系统：支持 Windows 10/11、macOS、Linux 等主流操作系统，确保系统的跨平台兼容性。
-（2）开发语言：
-前端页面：JavaScript + TypeScript + React
-后端：Python 3.13+ FastAPI + LangChain
-AI 服务层：Python + PyTorch + SGLang
-（3）标准规范：遵循 HTML5、CSS3 和 JavaScript ES6+ 的标准规范，确保代码的兼容性和可维护性。
-（4）开发工具：
-前端开发：VS Code、WebStorm
-后端开发：PyCharm Professional、VS Code
-版本控制：Git
-文档工具：Markdown、LaTeX
-（5）数据库：使用 PostgreSQL 14+，确保数据的稳定性和安全性。
-（6）硬件约束：
-服务器：至少 8 核 CPU、32GB 内存、500GB 存储空间
-客户端：支持现代浏览器的计算机或移动设备
-AI 模型推理：需要支持 GPU 加速的服务器
-（7）接口约束：
-系统需提供 RESTful API 接口，支持 OpenAI API 兼容格式
-支持 WebSocket 用于实时通信
-（8）性能约束：
-系统响应时间：普通操作 <1 秒，代码生成 <25 秒
-并发用户数：支持至少 100 个并发用户
-系统可用性：99.9\%
-（9）安全约束：
-实施基于 JWT 的身份验证
-用户密码需要加密存储
-敏感数据传输需要 HTTPS 加密
+\begin{itemize}
+    \item 操作系统：支持 Windows 10/11、macOS、Linux 等主流操作系统，确保系统的跨平台兼容性。
+    \item 开发语言：
+        \begin{itemize}
+            \item 前端页面：JavaScript + TypeScript + React
+            \item 后端：Python 3.13+ FastAPI + LangChain
+            \item AI 服务层：Python + PyTorch + SGLang
+        \end{itemize}
+    \item 标准规范：遵循 HTML5、CSS3 和 JavaScript ES6+ 的标准规范，确保代码的兼容性和可维护性。
+    \item 开发工具：
+        \begin{itemize}
+            \item 前端开发：VS Code、WebStorm
+            \item 后端开发：PyCharm Professional、VS Code
+            \item 版本控制：Git
+            \item 文档工具：Markdown、LaTeX
+        \end{itemize}
+    \item 数据库：使用 PostgreSQL 14+，确保数据的稳定性和安全性。
+    \item 硬件约束：
+        \begin{itemize}
+            \item 服务器：至少 8 核 CPU、32GB 内存、500GB 存储空间
+            \item 客户端：支持现代浏览器的计算机或移动设备
+            \item AI 模型推理：需要支持 GPU 加速的服务器
+        \end{itemize}
+    \item 接口约束：
+        \begin{itemize}
+            \item 系统需提供 RESTful API 接口，支持 OpenAI API 兼容格式
+            \item 支持 WebSocket 用于实时通信
+        \end{itemize}
+    \item 性能约束：
+        \begin{itemize}
+            \item 系统响应时间：普通操作 <1 秒，代码生成 <25 秒
+            \item 并发用户数：支持至少 100 个并发用户
+            \item 系统可用性：99.9\%
+        \end{itemize}
+    \item 安全约束：
+        \begin{itemize}
+            \item 实施基于 JWT 的身份验证
+            \item 用户密码需要加密存储
+            \item 敏感数据传输需要 HTTPS 加密
+        \end{itemize}
+\end{itemize}
 \section{软件设计}
 \subsection{软件体系结构设计}
-% 包图
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{UML/PackageDiagram.png}

@@ -13,16 +13,17 @@ repeat
   :System executes code to next breakpoint or step;
   :System displays execution flow and data changes in real-time;
   partition RAG Assistance {
-    if (Abnormal state detected?) then (Yes)
-        :System identifies anomaly;
+    if () then
+        ->[abnormal state] :System identifies anomaly;
         :System recommends debugging strategies (e.g., check variable, check function call);
         :Display suggestions to user;
     endif
   }
   
   |User|
-repeat while (User continues debugging?) is (Yes) not (No)
-:User ends debugging session;
+repeat while (continue debugging?)
+->[yes] 
+->[no] :User ends debugging session;
 stop
 
 @enduml

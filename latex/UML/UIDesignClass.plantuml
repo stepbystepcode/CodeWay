@@ -1,198 +1,79 @@
 @startuml UIDesignClass
 
+' 设置图片尺寸和主题
 !theme plain
-skinparam linetype ortho
-skinparam dpi 300
+skinparam dpi 200
 skinparam defaultFontName Microsoft YaHei
+skinparam classAttributeIconSize 0
 
-' 核心UI组件
+' 设置垂直方向布局
+top to bottom direction
+
+' 设置页面宽度，防止截断
+scale max 800 width
+
+' 隐藏圆圈和空方法/字段
+hide circle
+hide empty members
+
+' 定义组件类
 package "Core UI Components" {
-  abstract class "UIComponent" {
-    +render(): ReactNode
-    #useState()
-    #useEffect()
-  }
-  
-  class "Button" {
-    +variant: string
-    +size: string
-    +disabled: boolean
-    +onClick(): void
-  }
-  
-  class "Input" {
-    +type: string
-    +value: string
-    +placeholder: string
-    +onChange(event): void
-    +error: string
-  }
-  
-  class "Card" {
-    +className: string
-    +children: ReactNode
-  }
-  
-  class "Dialog" {
-    +isOpen: boolean
-    +onClose(): void
-    +title: string
-  }
-  
-  class "Tabs" {
-    +value: string
-    +onChange(value): void
-    +items: TabItem[]
-  }
-  
-  class "Avatar" {
-    +src: string
-    +alt: string
-    +fallback: string
-  }
-  
-  class "Sidebar" {
-    +isOpen: boolean
-    +onToggle(): void
-    +items: MenuItem[]
-  }
+  abstract class "UIComponent" as UI
+  class "Button" as Btn
+  class "Input" as Inp
+  class "Card" as Crd
+  class "Dialog" as Dlg
+  class "Tabs" as Tab
 }
 
-' 页面组件
-package "Page Components" {
-  class "LoginPage" {
-    -email: string
-    -password: string
-    -errors: Object
-    +validateForm(): boolean
-    +handleSubmit(): void
-  }
-  
-  class "RegisterPage" {
-    -email: string
-    -password: string
-    -confirmPassword: string
-    -verificationCode: string
-    -username: string
-    -currentStep: number
-    +validateStep1(): boolean
-    +validateStep2(): boolean
-    +handleNextStep(): void
-    +handleResendCode(): void
-  }
-  
-  class "EditorPage" {
-    -currentFile: File
-    -fileContent: string
-    -isAIPanelOpen: boolean
-    +saveFile(): void
-    +updateContent(content): void
-    +toggleAIPanel(): void
-  }
-  
-  class "ProjectPage" {
-    -projects: Project[]
-    -selectedProject: Project
-    +createProject(): void
-    +openProject(id): void
-    +deleteProject(id): void
-  }
+' 定义页面
+package "Pages" {
+  class "LoginPage" as LoginP
+  class "RegisterPage" as RegP
+  class "EditorPage" as EditorP
+  class "ProjectPage" as ProjP
 }
 
-' 功能组件
-package "Feature Components" {
-  class "CodeEditor" {
-    +language: string
-    +value: string
-    +onChange(value): void
-    +highlightLine(line): void
-  }
-  
-  class "FileExplorer" {
-    +files: File[]
-    +onFileSelect(file): void
-    +onFolderExpand(folder): void
-  }
-  
-  class "AIAssistant" {
-    -prompt: string
-    -response: string
-    -isLoading: boolean
-    +submitPrompt(): void
-    +applyCode(): void
-    +provideFeedback(rating): void
-  }
-  
-  class "NavigationMenu" {
-    +items: MenuItem[]
-    +activeItem: string
-    +onSelect(item): void
-  }
+' 定义功能组件
+package "Features" {
+  class "CodeEditor" as CodeEd
+  class "FileExplorer" as FileExp
+  class "AIAssistant" as AIA
 }
 
-' 管理和服务
+' 定义服务
 package "Services" {
-  class "AuthService" {
-    +login(credentials): Promise
-    +register(userData): Promise
-    +verify(verificationData): Promise
-    +logout(): void
-    +getCurrentUser(): User
-  }
-  
-  class "ProjectService" {
-    +getProjects(): Promise
-    +createProject(project): Promise
-    +updateProject(id, data): Promise
-    +deleteProject(id): Promise
-  }
-  
-  class "FileService" {
-    +getFiles(projectId): Promise
-    +saveFile(file, content): Promise
-    +createFile(projectId, path): Promise
-    +deleteFile(id): Promise
-  }
-  
-  class "AIService" {
-    +generateCode(prompt): Promise
-    +analyzeCode(code): Promise
-    +explainCode(code): Promise
-  }
+  class "AuthService" as AuthSvc
+  class "ProjectService" as ProjSvc
+  class "FileService" as FileSvc
+  class "AIService" as AISvc
 }
 
-' 关系
-UIComponent <|-- Button
-UIComponent <|-- Input
-UIComponent <|-- Card
-UIComponent <|-- Dialog
-UIComponent <|-- Tabs
-UIComponent <|-- Avatar
-UIComponent <|-- Sidebar
+' 继承关系
+UI <|-- Btn
+UI <|-- Inp
+UI <|-- Crd
+UI <|-- Dlg
+UI <|-- Tab
 
-LoginPage --> Button
-LoginPage --> Input
-LoginPage --> Card
-LoginPage --> AuthService
+' 主要依赖关系
+LoginP --> AuthSvc
+RegP --> AuthSvc
+EditorP --> CodeEd
+EditorP --> FileExp
+EditorP --> AIA
+ProjP --> ProjSvc
 
-RegisterPage --> Button
-RegisterPage --> Input
-RegisterPage --> Card
-RegisterPage --> AuthService
+' 次要依赖关系
+CodeEd ..> FileSvc
+AIA ..> AISvc
+FileExp ..> FileSvc
 
-EditorPage --> CodeEditor
-EditorPage --> FileExplorer
-EditorPage --> AIAssistant
-EditorPage --> FileService
-EditorPage --> AIService
-
-ProjectPage --> Card
-ProjectPage --> Button
-ProjectPage --> ProjectService
-
-CodeEditor ..> FileService
-AIAssistant ..> AIService
-FileExplorer ..> FileService
-NavigationMenu ..> ProjectService
+' 标注类的主要特性
+note right of UI : Base UI components
+note right of LoginP : User login
+note right of EditorP : Code editing
+note right of CodeEd : Code editor
+note right of AuthSvc : Authentication service
 
 @enduml

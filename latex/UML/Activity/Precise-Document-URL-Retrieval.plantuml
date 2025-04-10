@@ -8,16 +8,16 @@ start
 
 |System|
 :System checks if URL format is valid;
-if (Is URL format valid?) then (Yes)
-  :System checks if document exists in Vector DB;
-  if (Does document exist?) then (Yes)
-    :Enable QA feature;
+if () then
+  ->[URL有效] :System checks if document exists in Vector DB;
+  if () then
+    ->[文档存在] :Enable QA feature;
     :System provides detailed answers based on document content;
     
     |User|
     stop
-  else (No)
-    :Prompt user: "Document not found, please add it";
+  else
+    ->[文档不存在] :Prompt user: "Document not found, please add it";
     partition Document Addition Process {
       :Extract document content;
       :Vectorize content;
@@ -28,8 +28,8 @@ if (Is URL format valid?) then (Yes)
     |User|
     stop
   endif
-else (No)
-  :Prompt user: "Invalid URL format";
+else
+  ->[URL无效] :Prompt user: "Invalid URL format";
   
   |User|
   stop

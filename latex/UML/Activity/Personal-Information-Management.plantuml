@@ -16,11 +16,11 @@ split
   
   |System|
   :System validates data;
-  if (Validation passes?) then (Yes)
-    :System updates user information;
+  if () then
+    ->[验证通过] :System updates user information;
     :Display "Update successful";
-  else (No)
-    :Display error message;
+  else
+    ->[验证失败] :Display error message;
   endif
   
 |User|

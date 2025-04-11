@@ -3,7 +3,6 @@ from pathlib import Path
 from textwrap import dedent
 
 from agno.agent import Agent
-from agno.models.openai.like import OpenAILike
 # from agno.models.openai import OpenAIChat
 from agno.models.ollama import Ollama
 from agno.tools.mcp import MCPTools
@@ -24,7 +23,6 @@ async def run_agent(message: str) -> None:
     async with MCPTools(f"npx -y @modelcontextprotocol/server-filesystem {file_path}") as mcp_tools:
         agent = Agent(
             # model=OpenAIChat(id="gpt-4o", base_url=os.environ.get("OPENAI_BASE_URL"), api_key=os.environ.get("OPENAI_API_KEY")),
-            # model=OpenAILike(id="Qwen/Qwen2.5-7B-Instruct", base_url=os.environ.get("LOCAL_API_BASE"), max_tokens=512),
             model=Ollama(id="qwen2.5:32b"),
             tools=[mcp_tools],
             instructions=dedent(f"""\

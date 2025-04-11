@@ -30,6 +30,8 @@ dependencies = [
     "agently",
     "llama-index-embeddings-huggingface>=0.5.2",
     "openai>=1.70.0",
+    "agno>=1.2.16",
+    "cohere>=5.14.2",
 ]
 
 [tool.uv.sources]

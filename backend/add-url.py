@@ -82,6 +82,7 @@ knowledge_base = DocumentKnowledgeBase(
     documents=documents,
     vector_db=vector_db,
     embedder=embedder,
+    num_documents=1
 )
 
 knowledge_base.load(recreate=False)  # Comment out after first run

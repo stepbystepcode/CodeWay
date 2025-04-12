@@ -32,6 +32,8 @@ dependencies = [
     "openai>=1.70.0",
     "agno>=1.2.16",
     "cohere>=5.14.2",
+    "lancedb>=0.21.2",
+    "ollama>=0.4.7",
 ]
 
 [tool.uv.sources]

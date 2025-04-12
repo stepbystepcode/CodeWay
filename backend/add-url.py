@@ -1,7 +1,9 @@
 import requests
-import os
 import hashlib
 import json
+import asyncio
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from agno.agent import Agent
 from agno.knowledge.document import DocumentKnowledgeBase
@@ -73,19 +75,87 @@ def get_url_content(url):
         print(f"Error downloading {url}: {e}")
         return f"Error: Could not download content from {url}. {str(e)}"
 
+
+async def async_get_url_content(url):
+    """异步获取URL内容，优先使用缓存"""
+    # 使用同步函数，但在线程池中运行
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(None, get_url_content, url)
+
+
+def download_parallel_with_threading(url_list, max_workers=10):
+    """使用ThreadPoolExecutor进行并行下载"""
+    start_time = time.time()
+    documents = []
+    
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # 提交所有任务
+        future_to_url = {executor.submit(get_url_content, url): url for url in url_list}
+        
+        # 获取结果
+        for future in as_completed(future_to_url):
+            url = future_to_url[future]
+            try:
+                content = future.result()
+                documents.append(Document(content=content))
+                print(f"Downloaded {url} (ThreadPool)")
+            except Exception as e:
+                print(f"Error processing {url}: {e}")
+    
+    print(f"Total download time with ThreadPoolExecutor: {time.time() - start_time:.2f} seconds")
+    return documents
+
+
+async def download_parallel_with_taskgroup(url_list, max_concurrent=10):
+    """使用Python 3.13的TaskGroup特性进行并行下载"""
+    start_time = time.time()
+    documents = []
+    
+    # 使用分组处理，避免同时创建太多任务
+    for i in range(0, len(url_list), max_concurrent):
+        batch = url_list[i:i+max_concurrent]
+        
+        async with asyncio.TaskGroup() as tg:
+            # 为每个URL创建一个任务
+            tasks = [tg.create_task(async_get_url_content(url)) for url in batch]
+        
+        # 处理完成的任务结果
+        for task, url in zip(tasks, batch):
+            try:
+                content = task.result()
+                documents.append(Document(content=content))
+                print(f"Downloaded {url} (TaskGroup)")
+            except Exception as e:
+                print(f"Error processing {url}: {e}")
+    
+    print(f"Total download time with TaskGroup: {time.time() - start_time:.2f} seconds")
+    return documents
+
 # 获取URLs列表
 url_list = get_md_raw_urls("https://github.com/jax-ml/jax/tree/main/docs")
 
-# 使用缓存功能获取文档内容
-documents = [Document(content=get_url_content(url)) for url in url_list]
-knowledge_base = DocumentKnowledgeBase(
-    documents=documents,
-    vector_db=vector_db,
-    embedder=embedder,
-    num_documents=1
-)
+# 选择并行下载方法
+# 方法1: 使用Python 3.13的TaskGroup (异步方式)
+async def main_async():
+    documents = await download_parallel_with_taskgroup(url_list, max_concurrent=10)
+    
+    knowledge_base = DocumentKnowledgeBase(
+        documents=documents,
+        vector_db=vector_db,
+        embedder=embedder,
+        num_documents=1
+    )
+    
+    knowledge_base.load(recreate=False)  # Comment out after first run
+    
+    agent = Agent(
+        model=Ollama(id="qwen2.5:32b"),
+        knowledge=knowledge_base,
+        show_tool_calls=True,
+        markdown=True,
+        # debug_mode=True
+    )
+    agent.print_response("According to the JAX API compatibility document, which legacy modules are explicitly listed that currently contain some private APIs without an underscore prefix, and whose modules and APIs are being actively deprecated, and whose deprecation process may not fully follow the standard 3-month deprecation period?", markdown=True)
 
-knowledge_base.load(recreate=False)  # Comment out after first run
-
-agent = Agent(model=Ollama(id="qwen2.5:32b"), knowledge=knowledge_base, show_tool_calls=True,markdown=True,debug_mode=True)
-agent.print_response("According to the JAX API compatibility document, which legacy modules are explicitly listed that currently contain some private APIs without an underscore prefix, and whose modules and APIs are being actively deprecated, and whose deprecation process may not fully follow the standard 3-month deprecation period?", markdown=True)
+if __name__ == "__main__":
+    asyncio.run(main_async())

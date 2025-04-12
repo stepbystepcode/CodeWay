@@ -161,4 +161,5 @@ cython_debug/
 #.idea/
 
 # Cache
-cache/
+url_cache/
+db/

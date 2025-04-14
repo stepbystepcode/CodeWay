@@ -35,6 +35,51 @@ const generateUniqueId = (prefix = '') => {
   return uniqueId;
 };
 
+// 加载动画组件
+const LoadingSpinner = ({className}: {className?: string}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`animate-spin ${className || ''}`}
+    >
+      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
+  );
+};
+
+// 思考中提示组件
+const ThinkingIndicator = () => {
+  const [text, setText] = useState("Thinking");
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setText(prev => {
+        if (prev === "Thinking") return "Thinking.";
+        if (prev === "Thinking.") return "Thinking..";
+        if (prev === "Thinking..") return "Thinking...";
+        return "Thinking";
+      });
+    }, 500);
+    
+    return () => clearInterval(interval);
+  }, []);
+  
+  return (
+    <div className="flex items-center justify-center gap-2 py-6 text-gray-500 italic">
+      <LoadingSpinner className="h-5 w-5" />
+      <span className="text-base">{text}</span>
+    </div>
+  );
+};
+
 export const Route = createFileRoute('/')({
   component: () => (
     <QueryClientProvider client={queryClient}>
@@ -49,6 +94,7 @@ type Message = {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  model?: string; // 添加模型信息字段
 }
 
 type Chat = {
@@ -71,7 +117,7 @@ function ChatGPT() {
 
   const [activeChat, setActiveChat] = useState<string>(chats[0].id);
   const [inputValue, setInputValue] = useState<string>('');
-  const [model, setModel] = useState<string>('gpt-4o');
+  const [model, setModel] = useState<string>('local');
   const [filterValue, setFilterValue] = useState<string>('');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isStreaming, setIsStreaming] = useState(false);
@@ -167,7 +213,8 @@ function ChatGPT() {
       id: generateUniqueId('msg-'),
       role: 'assistant',
       content: '',
-      timestamp: new Date()
+      timestamp: new Date(),
+      model: model // 存储生成消息时使用的模型
     };
     
     // Store the reference to the current streaming message
@@ -398,9 +445,10 @@ function ChatGPT() {
       }`}>
         {/* Chat Messages */}
         <div className="flex-1 overflow-y-auto p-4">
+          {/* 消息列表 */}
           {activeMessages.map(message => (
             <div key={message.id} className="mb-4">
-              {message.role === 'user' ? (
+              {(message.role as string) === 'user' ? (
                 <div className="ml-auto max-w-[80%]">
                   <div className="rounded-lg bg-muted p-3 markdown-content">
                     <div className="prose prose-headings:mt-2 prose-headings:mb-2 prose-headings:font-bold prose-p:my-1 max-w-none">
@@ -429,11 +477,78 @@ function ChatGPT() {
                       >
                         {message.content}
                       </Markdown>
+                      
+                      {/* 思考中提示已移至消息列表末尾 */}
+                      
+                      {(message.role as string) === 'assistant' && (
+                        <div className="flex items-center mt-3 text-sm gap-2">
+                          <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-xs">
+                            {message.model === 'local' ? 'Qwen2.5-32B' : 'GPT-4o'}
+                          </span>
+                          <div className="flex-1"></div>
+                          <button 
+                            className="text-gray-500 hover:text-gray-700 flex items-center gap-0.5"
+                            onClick={(e) => {
+                              const target = e.currentTarget;
+                              const svg = target.querySelector('svg');
+                              if (svg) {
+                                // 切换填充状态
+                                const isFilled = svg.getAttribute('fill') === 'currentColor';
+                                svg.setAttribute('fill', isFilled ? 'none' : 'currentColor');
+                              }
+                            }}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                            </svg>
+                          </button>
+                          <button 
+                            className="text-gray-500 hover:text-gray-700 flex items-center gap-0.5"
+                            onClick={() => {
+                              // 移除最后一条助手消息
+                              // 使用兼容的方法找到最后一个用户消息的索引
+                              let lastUserMessageIndex = -1;
+                              for (let i = activeMessages.length - 1; i >= 0; i--) {
+                                if ((activeMessages[i].role as string) === 'user') {
+                                  lastUserMessageIndex = i;
+                                  break;
+                                }
+                              }
+                              
+                              if (lastUserMessageIndex !== -1) {
+                                const lastUserMessage = activeMessages[lastUserMessageIndex];
+                                const updatedChats = chats.map(chat => {
+                                  if (chat.id === activeChat) {
+                                    // 移除最后一个用户消息后的所有消息
+                                    const updatedMessages = chat.messages.slice(0, lastUserMessageIndex + 1);
+                                    return { ...chat, messages: updatedMessages };
+                                  }
+                                  return chat;
+                                });
+                                
+                                setChats(updatedChats);
+                                
+                                // 使用最后一条用户消息重新发送
+                                setTimeout(() => {
+                                  // 创建一个事件对象，模拟输入和发送消息
+                                  setInputValue(lastUserMessage.content);
+                                  // 延迟一下再发送，确保状态已经更新
+                                  setTimeout(() => handleSendMessage(), 100);
+                                }, 100);
+                              }
+                            }}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="mr-auto max-w-[80%]">
+                <div className="w-full">
                   <div className="rounded-lg p-3 markdown-content">
                     <div className="prose prose-headings:mt-2 prose-headings:mb-2 prose-headings:font-bold prose-p:my-1 max-w-none">
                       <Markdown
@@ -461,12 +576,82 @@ function ChatGPT() {
                       >
                         {message.content}
                       </Markdown>
+                      
+                      {/* 思考中提示已移至消息列表末尾 */}
+                      
+                      {(message.role as string) === 'assistant' && (
+                        <div className="flex items-center mt-3 text-sm gap-2">
+                          <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-xs">
+                            {message.model === 'local' ? 'Qwen2.5-32B' : 'GPT-4o'}
+                          </span>
+                          <div className="flex-1"></div>
+                          <button 
+                            className="text-gray-500 hover:text-gray-700 flex items-center gap-0.5"
+                            onClick={(e) => {
+                              const target = e.currentTarget;
+                              const svg = target.querySelector('svg');
+                              if (svg) {
+                                // 切换填充状态
+                                const isFilled = svg.getAttribute('fill') === 'currentColor';
+                                svg.setAttribute('fill', isFilled ? 'none' : 'currentColor');
+                              }
+                            }}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                            </svg>
+                          </button>
+                          <button 
+                            className="text-gray-500 hover:text-gray-700 flex items-center gap-0.5"
+                            onClick={() => {
+                              // 移除最后一条助手消息
+                              // 使用兼容的方法找到最后一个用户消息的索引
+                              let lastUserMessageIndex = -1;
+                              for (let i = activeMessages.length - 1; i >= 0; i--) {
+                                if ((activeMessages[i].role as string) === 'user') {
+                                  lastUserMessageIndex = i;
+                                  break;
+                                }
+                              }
+                              
+                              if (lastUserMessageIndex !== -1) {
+                                const lastUserMessage = activeMessages[lastUserMessageIndex];
+                                const updatedChats = chats.map(chat => {
+                                  if (chat.id === activeChat) {
+                                    // 移除最后一个用户消息后的所有消息
+                                    const updatedMessages = chat.messages.slice(0, lastUserMessageIndex + 1);
+                                    return { ...chat, messages: updatedMessages };
+                                  }
+                                  return chat;
+                                });
+                                
+                                setChats(updatedChats);
+                                
+                                // 使用最后一条用户消息重新发送
+                                setTimeout(() => {
+                                  // 创建一个事件对象，模拟输入和发送消息
+                                  setInputValue(lastUserMessage.content);
+                                  // 延迟一下再发送，确保状态已经更新
+                                  setTimeout(() => handleSendMessage(), 100);
+                                }, 100);
+                              }
+                            }}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
               )}
             </div>
           ))}
+          
+          {/* 思考中提示 - 直接放在消息列表末尾 */}
+          {isStreaming && <ThinkingIndicator />}
         </div>
 
         {/* Input Area */}

@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 import httpx
 from typing import Optional
 from datetime import datetime
-from src.agent import agent
+# from src.agent import agent
 class GithubUrlRequest(BaseModel):
     url: str = Field(..., description="GitHub URL, e.g. https://github.com/jax-ml/jax/tree/main/docs")
 
@@ -195,10 +195,11 @@ async def add_github_url(request: GithubUrlRequest):
 class ChatRequest(BaseModel):
     query: str = Field(..., description="Query to ask about the documentation")
     url: str = Field(..., description="URL of the GitHub repository")
+    mode: str = Field(..., description="Mode to use for the query")
 
-@app.post("/api/chat")
-async def chat(request: ChatRequest):
-    query = f"在{request.url}中，{request.query}"
-    return {
-        "response": agent.input(query).start()
-    }
+from src.github import ask_qa
+
+@app.post("/api/ask-github-docs")
+async def ask_github_docs(request: ChatRequest):
+    response = await ask_qa(request.query, request.url, mode=request.mode)
+    return {"response": response.content}

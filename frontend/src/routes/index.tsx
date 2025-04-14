@@ -319,7 +319,7 @@ function ChatGPT() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="gpt-4o">ChatGPT-4o</SelectItem>
-              <SelectItem value="qwen-qwq-32b">Qwen QwQ-32B</SelectItem>
+              <SelectItem value="local">Qwen2.5-32B-Instruct</SelectItem>
             </SelectContent>
           </Select>
         </div>

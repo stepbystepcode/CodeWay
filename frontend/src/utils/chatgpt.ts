@@ -16,7 +16,7 @@ export type BackendApiResponse = {
 
 // 为了兼容现有代码，保留OpenAI风格的类型定义
 export type ChatCompletionRequest = {
-  model: string;
+  mode: string;
   messages: {
     role: 'system' | 'user' | 'assistant';
     content: string;
@@ -81,10 +81,10 @@ export const streamChatGptRequest = async (
     const backendRequest: BackendApiRequest = {
       query: lastUserMessage.content,
       url: requestData.url,
-      // mode: 'local' // 默认使用本地模型
+      mode: requestData.mode || 'local' // 默认使用本地模型
     };
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/chat`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/ask-github-docs`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ export const streamChatGptRequest = async (
         id: `chunk-${Date.now()}`,
         object: 'chat.completion.chunk',
         created: Date.now(),
-        model: requestData.model || 'gemma3',
+        model: requestData.mode || 'local',
         choices: [
           {
             index: 0,
@@ -157,7 +157,7 @@ export const streamChatGptRequest = async (
             id: `chunk-final-${Date.now()}`,
             object: 'chat.completion.chunk',
             created: Date.now(),
-            model: requestData.model || 'gemma3',
+            model: requestData.mode || 'local',
             choices: [
               {
                 index: 0,
@@ -187,7 +187,7 @@ export const streamChatGptRequest = async (
         id: `chunk-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
         object: 'chat.completion.chunk',
         created: Date.now(),
-        model: requestData.model || 'gemma3',
+        model: requestData.mode || 'local',
         choices: [
           {
             index: 0,
@@ -236,10 +236,10 @@ export const useStreamChatGptMutation = () => {
 // Utility function to convert our app message format to OpenAI API format
 export const convertMessagesToApiFormat = (
   messages: Array<{ role: 'user' | 'assistant'; content: string }>,
-  model: string
+  mode: string
 ): ChatCompletionRequest => {
   return {
-    model,
+    mode,
     messages: messages.map(msg => ({
       role: msg.role,
       content: msg.content,
